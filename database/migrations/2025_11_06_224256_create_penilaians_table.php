@@ -6,22 +6,25 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        Schema::create('penilaians', function (Blueprint $table) {
+        Schema::create('penilaian', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('anggota_id')->constrained('anggota_ekstrakurikuler')->cascadeOnDelete();
+            $table->foreignId('ekstrakurikuler_id')->constrained('ekstrakurikuler')->cascadeOnDelete();
+            $table->year('tahun_ajaran');
+            $table->enum('semester', ['1','2','3','4','5','6']);
+            $table->enum('keterangan', ['sangat baik','baik','cukup baik','cukup','kurang baik']);
+            $table->text('catatan')->nullable();
+            $table->foreignId('dibuat_oleh')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
+
+            $table->unique(['anggota_id','tahun_ajaran','semester']);
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('penilaians');
+        Schema::dropIfExists('penilaian');
     }
 };
