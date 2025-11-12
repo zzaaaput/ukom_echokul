@@ -4,8 +4,8 @@
 
 @section('content')
 
-  {{-- Content Utama --}}
-  <div id="ekstraCarousel" class="carousel slide" data-bs-ride="carousel">
+{{-- Content Utama --}}
+<div id="ekstraCarousel" class="carousel slide" data-bs-ride="carousel">
     <div class="carousel-indicators">
       <button type="button" data-bs-target="#ekstraCarousel" data-bs-slide-to="0" class="active"></button>
       <button type="button" data-bs-target="#ekstraCarousel" data-bs-slide-to="1"></button>
@@ -30,10 +30,10 @@
     <button class="carousel-control-next" type="button" data-bs-target="#ekstraCarousel" data-bs-slide="next">
       <span class="carousel-control-next-icon"></span>
     </button>
-  </div>
+</div>
 
-  {{-- Informasi Singkat --}}
-  <section class="py-5">
+{{-- Informasi Singkat --}}
+<section class="py-5">
     <div class="container">
       <div class="row text-center g-4">
 
@@ -73,10 +73,10 @@
 
     </div>
     </div>
-  </section>
+</section>
 
-  {{-- Pengumuman Sekolah --}}
-  <section class="container-fluid py-5" style="background-color: #001f3f;">
+{{-- Pengumuman Sekolah --}}
+<section class="container-fluid py-5" style="background-color: #001f3f;">
     <div class="container">
       <h3 class="text-center mb-4 fw-bold text-white">Pengumuman & Acara Sekolah</h3>
 
@@ -101,60 +101,56 @@
         </a>
       </div>
     </div>
-  </section>
+</section>
 
-  {{-- Pembina Ekstrakurikuler --}}
-  <section class="container my-5">
+{{-- ==================== Pembina Ekstrakurikuler ==================== --}}
+<section class="container my-5">
     <h3 class="text-center mb-4 fw-bold">Pembina Ekstrakurikuler</h3>
 
-    <div id="carouselPembina" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2500">
-      <div class="carousel-inner">
+    @if($pembinas->isEmpty())
+        <p class="text-center text-muted">Belum ada data pembina ekstrakurikuler.</p>
+    @else
+        <div id="carouselPembina" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+            <div class="carousel-inner">
+                @foreach ($pembinas->chunk(3) as $index => $chunk)
+                    <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
+                        <div class="row justify-content-center">
+                            @foreach ($chunk as $pembina)
+                                @php
+                                    $fotoPath = $pembina->pembina && $pembina->pembina->foto
+                                        ? asset($pembina->pembina->foto)
+                                        : asset('build/assets/images/default-user.png');
+                                @endphp
 
-        {{-- Slide 1 --}}
-        <div class="carousel-item active">
-          <div class="row justify-content-center">
-            @for ($i = 1; $i <= 3; $i++)
-              <div class="col-md-4 text-center">
-                <img src="{{ asset('build/assets/images/pengumuman' . $i . '.png') }}" 
-                  class="rounded-circle pembina-img mx-auto d-block" 
-                  alt="Pembina {{ $i }}"
-                  style="width: 350px; height: 350px;">
-                <p class="mt-3 mb-0 fw-semibold">Drs. Pembina {{ $i }}</p>
-                <p class="text-muted">Pelatih Ekskul {{ $i }}</p>
-              </div>
-            @endfor
-          </div>
+                                <div class="col-md-4 text-center mb-4">
+                                    <img src="{{ $fotoPath }}"
+                                         class="rounded-circle mx-auto d-block shadow"
+                                         alt="{{ $pembina->pembina->nama_lengkap ?? 'Pembina' }}"
+                                         style="width: 300px; height: 300px; object-fit: cover;">
+                                    <p class="mt-3 mb-0 fw-semibold">
+                                        {{ $pembina->pembina->nama_lengkap ?? 'Nama Pembina Tidak Diketahui' }}
+                                    </p>
+                                    <p class="text-muted">
+                                        {{ $pembina->nama_ekstrakurikuler }}
+                                    </p>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+
+            {{-- Tombol Navigasi --}}
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselPembina" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon rounded-circle p-2" style="background-color: #001f3f;"></span>
+                <span class="visually-hidden">Sebelumnya</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselPembina" data-bs-slide="next">
+                <span class="carousel-control-next-icon rounded-circle p-2" style="background-color: #001f3f;"></span>
+                <span class="visually-hidden">Selanjutnya</span>
+            </button>
         </div>
-
-        {{-- Slide 2 --}}
-        <div class="carousel-item">
-          <div class="row justify-content-center">
-            @for ($i = 4; $i <= 6; $i++)
-              <div class="col-md-4 text-center">
-                <img src="{{ asset('build/assets/images/pengumuman' . $i . '.png') }}" 
-                    class="rounded-circle pembina-img mx-auto d-block" 
-                    alt="Pembina {{ $i }}"
-                    style="width: 350px; height: 350px;">
-                <p class="mt-3 mb-0 fw-semibold">Drs. Pembina {{ $i }}</p>
-                <p class="text-muted">Pelatih Ekskul {{ $i }}</p>
-              </div>
-            @endfor
-          </div>
-        </div>
-
-      </div>
-
-      {{-- Tombol navigasi --}}
-      <button class="carousel-control-prev" type="button" data-bs-target="#carouselPembina" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon rounded-circle p-2" style="background-color: #001f3f;"></span>
-        <span class="visually-hidden">Sebelumnya</span>
-      </button>
-      <button class="carousel-control-next" type="button" data-bs-target="#carouselPembina" data-bs-slide="next">
-        <span class="carousel-control-next-icon rounded-circle p-2" style="background-color: #001f3f;"></span>
-        <span class="visually-hidden">Selanjutnya</span>
-      </button>
-    </div>
-  </section>
-
+    @endif
+</section>
 
 @endsection

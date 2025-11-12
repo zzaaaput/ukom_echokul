@@ -1,124 +1,98 @@
-<nav class="navbar navbar-expand-lg shadow-sm" style="background-color: white;">
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
   <div class="container">
     <!-- Logo -->
-    <a class="navbar-brand fw-bold d-flex align-items-center" href="{{ route('home') }}" style="color: #001f3f;">
+    <a class="navbar-brand fw-bold d-flex align-items-center" href="{{ route('home') }}">
       <img src="{{ asset('build/assets/images/logo.png') }}" alt="Logo Echokul" width="70" height="40" class="me-2">
       ekskul
     </a>
 
-    <ul class="navbar-nav mx-auto">
-      <li class="nav-item">
-        <a class="nav-link nav-hover" href="{{ route('home') }}">
-          Beranda
-        </a>
-      </li>
+    <!-- Toggle button untuk mobile -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle nav-hover" href="#" role="button">
-          Ekstrakurikuler
-        </a>
-        <ul class="dropdown-menu">
-          <li><a class="dropdown-item" href="#">Materi</a></li>
-        </ul>
-      </li>
+    <!-- Menu -->
+    <div class="collapse navbar-collapse" id="navbarContent">
+      <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
 
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle nav-hover" href="#" role="button">
-          Informasi
-        </a>
-        <ul class="dropdown-menu">
-          <li><a class="dropdown-item" href="#">Kegiatan</a></li>
-          <li><a class="dropdown-item" href="#">Jadwal</a></li>
-          <li><a class="dropdown-item" href="#">Pengumuman</a></li>
-          <li><a class="dropdown-item" href="#">Dokumentasi</a></li>
-        </ul>
-      </li>
+        <!-- Beranda -->
+        <li class="nav-item">
+          {{-- <a class="nav-link" href="{{ route('home') }}">Beranda</a> --}}
+          <a href="{{ route('dashboard') }}" class="nav-link">Dashboard</a>
+        </li>
 
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle nav-hover" href="#" role="button">
-          Aktivitas
-        </a>
-        <ul class="dropdown-menu">
-          <li><a class="dropdown-item" href="#">Kehadiran</a></li>
-          <li><a class="dropdown-item" href="#">Prestasi</a></li>
-          <li><a class="dropdown-item" href="#">Diskusi</a></li>
-        </ul>
-      </li>
-    </ul>
+        <!-- User Menu: hanya untuk admin -->
+        @auth
+          @if(Auth::user()->role === 'admin')
+            <li class="nav-item">
+              <a class="nav-link" href="{{ route('admin.user.index') }}">User</a>
+            </li>
+          @endif
+        @endauth
 
-    <div class="d-flex align-items-center gap-2">
-      
-      @guest
-        <a href="{{ route('login') }}" class="btn btn-sm btn-login">
-           Login
-        </a>
+        <!-- Ekstrakurikuler Menu -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+            Ekstrakurikuler
+          </a>
+          <ul class="dropdown-menu">
+            <li>
+              <a class="dropdown-item" href="{{ route('ekstrakurikuler.index') }}">Ekstrakurikuler</a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="{{ route('anggota.index') }}">Anggota</a>
+            </li>
+          </ul>
+        </li>
 
-        <a href="{{ route('register') }}" class="btn btn-sm btn-register">
-           Register
-        </a>
-      @endguest
+        <!-- Informasi Menu (semua role bisa lihat) -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+            Informasi
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Kegiatan</a></li>
+            <li><a class="dropdown-item" href="#">Jadwal</a></li>
+            <li><a class="dropdown-item" href="#">Pengumuman</a></li>
+            <li><a class="dropdown-item" href="#">Dokumentasi</a></li>
+          </ul>
+        </li>
 
-      @auth
-        <a href="{{ route('dashboard') }}" class="btn btn-sm btn-dashboard">
-           Dashboard
-        </a>
-      @endauth
+        <!-- Aktivitas Menu (semua role bisa lihat) -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+            Aktivitas
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Kehadiran</a></li>
+            <li><a class="dropdown-item" href="#">Prestasi</a></li>
+            <li><a class="dropdown-item" href="#">Diskusi</a></li>
+          </ul>
+        </li>
+      </ul>
 
+      <!-- Login/Register/Logout -->
+      <div class="d-flex align-items-center gap-2">
+        @auth
+          <form action="{{ route('logout') }}" method="POST" style="display:inline;">
+              @csrf
+              <button type="submit" class="btn btn-sm btn-primary">Logout</button>
+          </form>
+        @else
+          <a href="{{ route('login') }}" class="btn btn-sm btn-primary">Login</a>
+          <a href="{{ route('register') }}" class="btn btn-sm btn-outline-primary">Register</a>
+        @endauth
+      </div>
     </div>
-
   </div>
 </nav>
 
+<!-- Optional: Hover dropdown untuk desktop -->
 <style>
-.nav-hover {
-  color: #001f3f !important;
-  transition: 0.3s;
-}
-
-.nav-hover:hover {
-  background-color: #001f3f;
-  color: white !important;
-  border-radius: 5px;
-}
-
-.nav-item.dropdown:hover .dropdown-menu {
-  display: block;
-  margin-top: 0;
-}
-.dropdown-item:hover {
-  background-color: #001f3f;
-  color: white;
-}
-
-.btn-login {
-  background-color: #001f3f;
-  color: white;
-  border: 1px solid #001f3f;
-  transition: 0.3s;
-}
-.btn-login:hover {
-  background-color: white;
-  color: #001f3f;
-}
-
-.btn-register {
-  border: 1px solid #001f3f;
-  color: #001f3f;
-  transition: 0.3s;
-}
-.btn-register:hover {
-  background-color: #001f3f;
-  color: white;
-}
-
-.btn-dashboard {
-  background-color: #001f3f;
-  color: white;
-  border: 1px solid #001f3f;
-  transition: 0.3s;
-}
-.btn-dashboard:hover {
-  background-color: white;
-  color: #001f3f;
+@media (min-width: 992px) {
+  .nav-item.dropdown:hover .dropdown-menu {
+    display: block;
+  }
 }
 </style>
