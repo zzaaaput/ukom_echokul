@@ -4,11 +4,6 @@
 @section('title', 'siswa')
 
 @section('content')
-    <div class="text-center mb-10">
-        <h1 class="text-3xl font-bold text-gray-900">Ekstrakurikuler SMAN 1</h1>
-        <p class="mt-2 text-gray-600">Temukan kegiatan yang sesuai minatmu!</p>
-    </div>
-
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         @foreach($ekstrakurikulers as $ekskul)
         <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition">

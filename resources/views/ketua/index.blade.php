@@ -5,18 +5,12 @@
 @section('content')
 <div class="py-6">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-
-        <!-- Header Ekstrakurikuler -->
         <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-2xl text-gray-800 mb-4">
-                Ekstrakurikuler: {{ $ekstrakurikuler->nama_ekstrakurikuler }}
-            </h2>
             <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">
                 Tambah Anggota
             </button>
         </div>
 
-        <!-- Info Ekskul & Statistik -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="bg-white shadow rounded-lg p-6">
                 <h3 class="text-lg font-medium text-gray-900 mb-2">Info Ekstrakurikuler</h3>
@@ -48,7 +42,6 @@
             </div>
         </div>
 
-        <!-- Daftar Anggota -->
         <div class="bg-white shadow rounded-lg p-6">
             <h3 class="text-lg font-medium text-gray-900 mb-4">Daftar Anggota</h3>
             <div class="overflow-x-auto">

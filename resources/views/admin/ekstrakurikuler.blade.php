@@ -5,9 +5,7 @@
 @section('content')
 <div class="container py-4">
 
-  <!-- Header -->
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <h3 class="fw-bold text-dark">Daftar Ekstrakurikuler</h3>
       @if(Auth::check() && Auth::user()->role === 'admin')
         <button class="btn text-white fw-semibold" style="background-color:#001f3f;"
                 data-bs-toggle="modal" data-bs-target="#modalTambah">
@@ -16,7 +14,6 @@
       @endif
   </div>
 
-  <!-- Search Form -->
 <div class="mb-3" style="max-width: 300px;">
   <form method="GET" action="{{ route('ekstrakurikuler.index') }}" class="d-flex">
     <input type="text" name="search"
@@ -31,7 +28,6 @@
   </form>
 </div>
 
-  <!-- Table -->
   <div class="card border-0 shadow-sm rounded-3">
     <div class="card-body p-0">
       <div class="table-responsive">
@@ -78,7 +74,6 @@
               </td>
             </tr>
 
-            <!-- Modal Detail -->
             <div class="modal fade" id="modalDetail{{ $item->id }}" tabindex="-1" aria-hidden="true">
               <div class="modal-dialog modal-lg modal-dialog-centered">
                 <div class="modal-content border-0 shadow">
@@ -115,7 +110,6 @@
             </div>
 
             @if(Auth::check() && Auth::user()->role === 'admin')
-              <!-- Modal Edit -->
               <div class="modal fade" id="modalEdit{{ $item->id }}" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
                   <div class="modal-content border-0 shadow">
@@ -186,7 +180,6 @@
                 </div>
               </div>
 
-              <!-- Modal Hapus -->
               <div class="modal fade" id="modalHapus{{ $item->id }}" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog">
                   <div class="modal-content border-0 shadow">
@@ -230,7 +223,6 @@
 </div>
 
   @if(Auth::check() && Auth::user()->role === 'admin')
-    <!-- Modal Tambah -->
     <div class="modal fade" id="modalTambah" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog modal-lg">
         <div class="modal-content border-0 shadow">

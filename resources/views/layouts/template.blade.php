@@ -1,4 +1,3 @@
-  {{-- Template untuk siswa --}}
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -11,6 +10,7 @@
 <body>
 
   @include('components.navbar-public')
+  @include('layouts.header')
 
   <main class="min-vh-100">
     @yield('content')

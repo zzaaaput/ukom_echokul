@@ -8,7 +8,6 @@
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h3 class="fw-bold text-dark mb-0">Anggota</h3>
             <span class="text-muted">Total: {{ $anggota->count() }} anggota</span>
         </div>
 
@@ -302,7 +301,7 @@
                     <button class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
     
-                <form action="{{ route('pembina.anggota.store') }}" method="POST">
+                <form action="{{ route('pembina.anggota.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
     
                     <div class="modal-body">
