@@ -8,6 +8,7 @@
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
+            <h3 class="fw-bold text-dark mb-0">User</h3>
             <span class="text-muted">Total: {{ $users->count() }} user</span>
         </div>
         

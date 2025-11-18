@@ -5,7 +5,10 @@ use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\EkstrakurikulerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AnggotaController;
+use App\Http\Controllers\KehadiranController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\PenilaianController;
+use App\Http\Controllers\PerlombaanController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,11 +23,11 @@ Route::get('/', [TemplateController::class, 'index'])->name('home');
 // Semua orang bisa melihat daftar anggota
 Route::get('/anggota', [AnggotaController::class, 'index'])->name('anggota.index');
 
-// Semua orang juga bisa melihat daftar ekstrakurikuler
+// Semua orang bisa melihat daftar ekstrakurikuler
 Route::get('/ekstrakurikuler', [EkstrakurikulerController::class, 'index'])
     ->name('ekstrakurikuler.index');
 
-// Daftar pembina ekstrakurikuler (opsional untuk publik)
+// Daftar pembina (opsional)
 Route::get('/ekstrakurikuler/pembina-list', [EkstrakurikulerController::class, 'getPembinaList'])
     ->name('ekstrakurikuler.pembina-list');
 
@@ -36,7 +39,7 @@ Route::get('/ekstrakurikuler/pembina-list', [EkstrakurikulerController::class, '
 */
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
 
-    // CRUD Ekstrakurikuler hanya untuk admin
+    // CRUD Ekstrakurikuler
     Route::post('ekstrakurikuler', [EkstrakurikulerController::class, 'store'])->name('admin.ekstrakurikuler.store');
     Route::put('ekstrakurikuler/{id}', [EkstrakurikulerController::class, 'update'])->name('admin.ekstrakurikuler.update');
     Route::delete('ekstrakurikuler/{id}', [EkstrakurikulerController::class, 'destroy'])->name('admin.ekstrakurikuler.destroy');
@@ -50,12 +53,32 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
 });
 
 
+/*
+|--------------------------------------------------------------------------
+| Route Pembina
+|--------------------------------------------------------------------------
+*/
 Route::prefix('pembina')->middleware(['auth', 'role:pembina'])->group(function () {
+
+    // CRUD Anggota
     Route::get('anggota', [AnggotaController::class, 'index'])->name('pembina.anggota.index');
     Route::post('anggota', [AnggotaController::class, 'store'])->name('pembina.anggota.store');
     Route::put('anggota/{id}', [AnggotaController::class, 'update'])->name('pembina.anggota.update');
     Route::delete('anggota/{id}', [AnggotaController::class, 'destroy'])->name('pembina.anggota.destroy');
+
+    // CRUD Penilaian
+    Route::resource('penilaian', PenilaianController::class)
+        ->names('pembina.penilaian');
+
+    // CRUD Perlombaan
+    Route::resource('perlombaan', PerlombaanController::class)
+        ->names('pembina.perlombaan');
+    // CRUD Kehadiran
+    Route::resource('kehadiran', KehadiranController::class)
+        ->names('pembina.kehadiran');
 });
+
+
 /*
 |--------------------------------------------------------------------------
 | Route Dashboard & Profil
@@ -92,9 +115,4 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 
-/*
-|--------------------------------------------------------------------------
-| Auth Routes
-|--------------------------------------------------------------------------
-*/
 require __DIR__ . '/auth.php';
