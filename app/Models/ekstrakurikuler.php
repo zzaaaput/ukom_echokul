@@ -37,14 +37,4 @@ class Ekstrakurikuler extends Model
     {
         return $this->belongsTo(User::class, 'user_ketua_id');
     }
-    
-    public function perlombaan()
-{
-    return $this->belongsTo(Perlombaan::class, 'ekstrakurikuler_id');
-
-}
-
-
-
-
 }

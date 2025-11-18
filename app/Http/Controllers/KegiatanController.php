@@ -2,64 +2,65 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\kegiatan;
+use App\Models\Kegiatan;
 use Illuminate\Http\Request;
 
 class KegiatanController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $data = Kegiatan::latest()->get();
+        return view('kegiatan.index', compact('data'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return view('kegiatan.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nama_kegiatan' => 'required',
+            'deskripsi' => 'required',
+            'tanggal' => 'required|date',
+            'tempat' => 'required'
+        ]);
+
+        Kegiatan::create($request->all());
+        return redirect()->route('kegiatan.index')->with('success', 'Kegiatan berhasil ditambahkan.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(kegiatan $kegiatan)
+    public function show($id)
     {
-        //
+        $item = Kegiatan::findOrFail($id);
+        return view('kegiatan.show', compact('item'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(kegiatan $kegiatan)
+    public function edit($id)
     {
-        //
+        $item = Kegiatan::findOrFail($id);
+        return view('kegiatan.edit', compact('item'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, kegiatan $kegiatan)
+    public function update(Request $request, $id)
     {
-        //
+        $item = Kegiatan::findOrFail($id);
+
+        $request->validate([
+            'nama_kegiatan' => 'required',
+            'deskripsi' => 'required',
+            'tanggal' => 'required|date',
+            'tempat' => 'required'
+        ]);
+
+        $item->update($request->all());
+        return redirect()->route('kegiatan.index')->with('success', 'Kegiatan berhasil diperbarui.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(kegiatan $kegiatan)
+    public function destroy($id)
     {
-        //
+        Kegiatan::destroy($id);
+        return redirect()->route('kegiatan.index')->with('success', 'Kegiatan berhasil dihapus.');
     }
 }
