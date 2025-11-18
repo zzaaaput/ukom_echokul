@@ -1,3 +1,4 @@
+
 <?php
 
 use App\Http\Controllers\ProfileController;
@@ -6,6 +7,10 @@ use App\Http\Controllers\EkstrakurikulerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AnggotaController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\PendaftaranController;
+use App\Http\Controllers\PengumumanController;
+use App\Http\Controllers\KegiatanController;
+use App\Http\Controllers\PenilaianController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,13 +26,11 @@ Route::get('/', [TemplateController::class, 'index'])->name('home');
 Route::get('/anggota', [AnggotaController::class, 'index'])->name('anggota.index');
 
 // Semua orang juga bisa melihat daftar ekstrakurikuler
-Route::get('/ekstrakurikuler', [EkstrakurikulerController::class, 'index'])
-    ->name('ekstrakurikuler.index');
+Route::get('/ekstrakurikuler', [EkstrakurikulerController::class, 'index'])->name('ekstrakurikuler.index');
 
 // Daftar pembina ekstrakurikuler (opsional untuk publik)
 Route::get('/ekstrakurikuler/pembina-list', [EkstrakurikulerController::class, 'getPembinaList'])
     ->name('ekstrakurikuler.pembina-list');
-
 
 /*
 |--------------------------------------------------------------------------
@@ -47,15 +50,31 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('user/{id}/edit', [UserController::class, 'edit'])->name('admin.user.edit');
     Route::put('user/{id}', [UserController::class, 'update'])->name('admin.user.update');
     Route::delete('user/{id}', [UserController::class, 'destroy'])->name('admin.user.destroy');
+
+    // **Modul Ratna**
+    Route::resource('pendaftaran', PendaftaranController::class);
+    Route::resource('pengumuman', PengumumanController::class);
+    Route::resource('kegiatan', KegiatanController::class);
 });
 
-
+/*
+|--------------------------------------------------------------------------
+| Route Pembina
+|--------------------------------------------------------------------------
+*/
 Route::prefix('pembina')->middleware(['auth', 'role:pembina'])->group(function () {
     Route::get('anggota', [AnggotaController::class, 'index'])->name('pembina.anggota.index');
     Route::post('anggota', [AnggotaController::class, 'store'])->name('pembina.anggota.store');
     Route::put('anggota/{id}', [AnggotaController::class, 'update'])->name('pembina.anggota.update');
     Route::delete('anggota/{id}', [AnggotaController::class, 'destroy'])->name('pembina.anggota.destroy');
 });
+
+Route::prefix('pembina')->middleware(['auth', 'role:pembina'])->name('pembina.')->group(function () {
+    Route::get('penilaian', [\App\Http\Controllers\PenilaianController::class, 'index'])
+        ->name('penilaian.index');
+});
+
+
 /*
 |--------------------------------------------------------------------------
 | Route Dashboard & Profil
@@ -90,7 +109,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-
 
 /*
 |--------------------------------------------------------------------------

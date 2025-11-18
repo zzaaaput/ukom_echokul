@@ -18,11 +18,10 @@
 
         <!-- Beranda -->
         <li class="nav-item">
-          {{-- <a class="nav-link" href="{{ route('home') }}">Beranda</a> --}}
           <a href="{{ route('dashboard') }}" class="nav-link">Dashboard</a>
         </li>
 
-        <!-- User Menu: hanya untuk admin -->
+        <!-- User Menu: hanya admin -->
         @auth
           @if(Auth::user()->role === 'admin')
             <li class="nav-item">
@@ -37,16 +36,12 @@
             Ekstrakurikuler
           </a>
           <ul class="dropdown-menu">
-            <li>
-              <a class="dropdown-item" href="{{ route('ekstrakurikuler.index') }}">Ekstrakurikuler</a>
-            </li>
-            <li>
-              <a class="dropdown-item" href="{{ route('anggota.index') }}">Anggota</a>
-            </li>
+            <li><a class="dropdown-item" href="{{ route('ekstrakurikuler.index') }}">Ekstrakurikuler</a></li>
+            <li><a class="dropdown-item" href="{{ route('anggota.index') }}">Anggota</a></li>
           </ul>
         </li>
 
-        <!-- Informasi Menu (semua role bisa lihat) -->
+        <!-- Informasi Menu -->
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
             Informasi
@@ -59,15 +54,15 @@
           </ul>
         </li>
 
-        <!-- Aktivitas Menu (semua role bisa lihat) -->
+        <!-- Aktivitas Menu -->
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
             Aktivitas
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Kehadiran</a></li>
-            <li><a class="dropdown-item" href="#">Prestasi</a></li>
-            <li><a class="dropdown-item" href="#">Diskusi</a></li>
+            <li><a class="dropdown-item" href="{{ route('pembina.kehadiran.index')}}">Kehadiran</a></li>
+            <li><a class="dropdown-item" href="{{ route('pembina.perlombaan.index') }}">Perlombaan</a></li>
+            <li><a class="dropdown-item" href="{{ route('pembina.penilaian.index') }}">Penilaian</a></li>
           </ul>
         </li>
       </ul>
