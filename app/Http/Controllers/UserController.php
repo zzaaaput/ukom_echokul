@@ -160,7 +160,7 @@ class UserController extends Controller
      */
     private function uploadFoto($file)
     {
-        $path = public_path('build/assets/images/users');
+        $path = public_path('storage/images/users');
 
         if (!file_exists($path)) {
             mkdir($path, 0777, true);
@@ -169,6 +169,6 @@ class UserController extends Controller
         $namaFile = time() . '_' . preg_replace('/\s+/', '_', $file->getClientOriginalName());
         $file->move($path, $namaFile);
 
-        return 'build/assets/images/users/' . $namaFile;
+        return 'storage/images/users/' . $namaFile;
     }
 }

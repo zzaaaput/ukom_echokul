@@ -1,4 +1,3 @@
-
 <?php
 
 use App\Http\Controllers\ProfileController;
@@ -11,6 +10,8 @@ use App\Http\Controllers\PendaftaranController;
 use App\Http\Controllers\PengumumanController;
 use App\Http\Controllers\KegiatanController;
 use App\Http\Controllers\PenilaianController;
+use App\Http\Controllers\PerlombaanController;
+use App\Http\Controllers\KehadiranController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -67,6 +68,18 @@ Route::prefix('pembina')->middleware(['auth', 'role:pembina'])->group(function (
     Route::post('anggota', [AnggotaController::class, 'store'])->name('pembina.anggota.store');
     Route::put('anggota/{id}', [AnggotaController::class, 'update'])->name('pembina.anggota.update');
     Route::delete('anggota/{id}', [AnggotaController::class, 'destroy'])->name('pembina.anggota.destroy');
+
+    // CRUD Penilaian
+    Route::resource('penilaian', PenilaianController::class)
+        ->names('pembina.penilaian');
+
+    // CRUD Perlombaan
+    Route::resource('perlombaan', PerlombaanController::class)
+        ->names('pembina.perlombaan');
+    // CRUD Kehadiran
+    Route::resource('kehadiran', KehadiranController::class)
+        ->names('pembina.kehadiran');
+
 });
 
 Route::prefix('pembina')->middleware(['auth', 'role:pembina'])->name('pembina.')->group(function () {
@@ -81,7 +94,7 @@ Route::prefix('pembina')->middleware(['auth', 'role:pembina'])->name('pembina.')
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'verified'])->group(function () {
-
+    // Profile    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::get('/dashboard', function () {
         return match (auth()->user()->role) {
             'admin'   => redirect()->route('dashboard.admin.index'),
@@ -98,16 +111,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::middleware('role:pembina')->get('/pembina', [DashboardController::class, 'pembina'])
         ->name('dashboard.pembina.index');
 
-    Route::middleware('role:ketua')->get('/ketua', [DashboardController::class, 'ketua'])
+        Route::middleware('role:ketua')->get('/ketua', [DashboardController::class, 'ketua'])
         ->name('dashboard.ketua.index');
-
-    Route::middleware('role:siswa')->get('/siswa', [DashboardController::class, 'siswa'])
+        
+        Route::middleware('role:siswa')->get('/siswa', [DashboardController::class, 'siswa'])
         ->name('dashboard.siswa.index');
-
-    // Profil
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+        
+        // Profil
+        Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
+        Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+        Route::get('/profile/password', [ProfileController::class, 'password'])->name('profile.password');
+        Route::post('/profile/password/update', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
 });
 
 /*

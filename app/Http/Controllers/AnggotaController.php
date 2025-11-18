@@ -150,7 +150,7 @@ class AnggotaController extends Controller
 
     private function uploadFoto($file)
     {
-        $path = public_path('build/assets/images/anggota');
+        $path = public_path('storage/images/anggota');
         if (!file_exists($path)) {
             mkdir($path, 0777, true);
         }
@@ -158,6 +158,6 @@ class AnggotaController extends Controller
         $filename = time() . '_' . preg_replace('/\s+/', '_', $file->getClientOriginalName());
         $file->move($path, $filename);
 
-        return 'build/assets/images/anggota/' . $filename;
+        return 'storage/images/anggota/' . $filename;
     }
 }

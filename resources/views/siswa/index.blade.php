@@ -14,13 +14,13 @@
 
     <div class="carousel-inner">
       <div class="carousel-item active">
-        <img src="{{ asset('build/assets/images/smkn1-5.png') }}" class="d-block w-100" alt="Slide 1" style="height: 600px; object-fit: cover;">
+        <img src="{{ asset('storage/images/smkn1-5.png') }}" class="d-block w-100" alt="Slide 1" style="height: 600px; object-fit: cover;">
       </div>
       <div class="carousel-item">
-        <img src="{{ asset('build/assets/images/smkn1-2.png') }}" class="d-block w-100" alt="Slide 2" style="height: 600px; object-fit: cover;">
+        <img src="{{ asset('storage/images/smkn1-2.png') }}" class="d-block w-100" alt="Slide 2" style="height: 600px; object-fit: cover;">
       </div>
       <div class="carousel-item">
-        <img src="{{ asset('build/assets/images/smkn1-3.png') }}" class="d-block w-100" alt="Slide 3" style="height: 600px; object-fit: cover;">
+        <img src="{{ asset('storage/images/smkn1-3.png') }}" class="d-block w-100" alt="Slide 3" style="height: 600px; object-fit: cover;">
       </div>
     </div>
 
@@ -84,7 +84,7 @@
         @for ($i = 1; $i <= 3; $i++)
           <div class="col-md-4">
             <div class="card shadow h-100 border-0">
-              <img src="{{ asset('build/assets/images/pengumuman' . $i . '.png') }}" class="card-img-top" alt="Event {{ $i }}">
+              <img src="{{ asset('storage/images/pengumuman' . $i . '.png') }}" class="card-img-top" alt="Event {{ $i }}">
               <div class="card-body text-center">
                 <h5 class="card-title fw-bold" style="color: #001f3f;">Judul Pengumuman {{ $i }}</h5>
                 <p class="card-text text-dark">Deskripsi singkat pengumuman atau acara sekolah.</p>
@@ -119,7 +119,7 @@
                                 @php
                                     $fotoPath = $pembina->pembina && $pembina->pembina->foto
                                         ? asset($pembina->pembina->foto)
-                                        : asset('build/assets/images/default-user.png');
+                                        : asset('storage/images/default-user.png');
                                 @endphp
 
                                 <div class="col-md-4 text-center mb-4">

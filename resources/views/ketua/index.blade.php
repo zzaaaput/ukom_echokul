@@ -22,7 +22,7 @@
                 <h3 class="text-lg font-medium text-gray-900 mb-2">Info Ekstrakurikuler</h3>
                 <p class="text-gray-600 mb-2">{{ $ekstrakurikuler->deskripsi }}</p>
                 <p class="text-gray-700 font-medium flex items-center">
-                    <img src="{{ asset($ekstrakurikuler->pembina->foto ?? 'build/assets/images/default-user.png') }}"
+                    <img src="{{ asset($ekstrakurikuler->pembina->foto ?? 'storage/images/default-user.png') }}"
                          alt="Foto Pembina" class="w-10 h-10 rounded-full mr-2 object-cover">
                     Pembina: {{ $ekstrakurikuler->pembina->nama_lengkap }}
                 </p>
@@ -66,7 +66,7 @@
                         @foreach($anggotaList as $anggota)
                         <tr>
                             <td class="px-4 py-2">
-                                <img src="{{ asset($anggota->foto ?? 'build/assets/images/default-user.png') }}" 
+                                <img src="{{ asset($anggota->foto ?? 'storage/images/default-user.png') }}" 
                                      class="w-10 h-10 rounded-full object-cover">
                             </td>
                             <td class="px-4 py-2">{{ $anggota->nama_anggota }}</td>

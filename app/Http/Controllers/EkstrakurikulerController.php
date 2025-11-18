@@ -130,12 +130,12 @@ public function index(Request $request)
 
     private function uploadFoto($file)
     {
-        $path = public_path('build/assets/images/ekstrakurikuler');
+        $path = public_path('storage/images/ekstrakurikuler');
         if (!file_exists($path)) mkdir($path, 0777, true);
 
         $namaFile = time() . '_' . preg_replace('/\s+/', '_', $file->getClientOriginalName());
         $file->move($path, $namaFile);
 
-        return 'build/assets/images/ekstrakurikuler/' . $namaFile;
+        return 'storage/images/ekstrakurikuler/' . $namaFile;
     }
 }

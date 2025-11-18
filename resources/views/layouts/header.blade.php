@@ -1,5 +1,5 @@
 @php
-    $backgroundImage = asset('build/assets/images/dashboard/background.png');
+    $backgroundImage = asset('storage/images/dashboard/background.png');
     $routeName = request()->route()->getName();
 
     $eksPembina = null;
