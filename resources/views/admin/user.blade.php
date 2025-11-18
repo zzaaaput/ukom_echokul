@@ -5,25 +5,59 @@
 @section('content')
 <div class="container py-4">
 
-    <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h3 class="fw-bold text-dark mb-0">User</h3>
             <span class="text-muted">Total: {{ $users->count() }} user</span>
         </div>
-        
-        <button class="btn btn-primary fw-semibold"
-        data-bs-toggle="modal"
-        data-bs-target="#modalTambahUser">
-        <i class="bi bi-plus-circle me-1"></i> Tambah User
-    </button>
-</div>
 
-<!-- Table -->
+        <div>
+            <a href="{{ route('admin.users.export.pdf') }}" class="btn btn-danger fw-semibold me-2">
+                <i class="bi bi-file-earmark-pdf"></i> Export PDF
+            </a>
+
+            <button class="btn btn-primary fw-semibold"
+                data-bs-toggle="modal"
+                data-bs-target="#modalTambahUser">
+                <i class="bi bi-plus-circle me-1"></i> Tambah User
+            </button>
+        </div>
+    </div>
+    {{-- DataTables CSS --}}
+<link rel="stylesheet" 
+href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" 
+href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap5.min.css">
+
+{{-- DataTables JS --}}
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.bootstrap5.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#tabel-user').DataTable({
+            dom: 'Bfrtip',
+            buttons: ['copy', 'csv', 'excel', 'print']
+        });
+    });
+</script>
+
+    <!-- Table -->
     <div class="card border-0 shadow-sm rounded-3">
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
+                <table id="tabel-user" class="table table-hover align-middle mb-0">
                     <thead class="bg-dark text-white">
                         <tr>
                             <th class="py-3 ps-4">No</th>

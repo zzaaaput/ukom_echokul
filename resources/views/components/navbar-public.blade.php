@@ -92,7 +92,7 @@
 
         @guest
             <a href="{{ route('login') }}" class="btn btn-sm btn-primary">Login</a>
-            <a href="{{ route('register') }}" class="btn btn-sm btn-outline-primary">Register</a>
+            <a href="{{ route('register') }}" class="btn btn-sm btn-outline-primary ms-2">Register</a>
         @endguest
 
       </div>

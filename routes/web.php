@@ -52,7 +52,10 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::put('user/{id}', [UserController::class, 'update'])->name('admin.user.update');
     Route::delete('user/{id}', [UserController::class, 'destroy'])->name('admin.user.destroy');
 
-    // **Modul Ratna**
+    // Export PDF User
+    Route::get('users/export/pdf', [UserController::class, 'exportPdf'])->name('admin.users.export.pdf');
+
+    // Modul Ratna
     Route::resource('pendaftaran', PendaftaranController::class);
     Route::resource('pengumuman', PengumumanController::class);
     Route::resource('kegiatan', KegiatanController::class);

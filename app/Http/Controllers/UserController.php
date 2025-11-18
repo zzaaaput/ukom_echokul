@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Barryvdh\DomPDF\Facade\Pdf;
+use App\Exports\UsersExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class UserController extends Controller
 {
@@ -171,4 +174,20 @@ class UserController extends Controller
 
         return 'storage/images/users/' . $namaFile;
     }
+
+    public function exportPdf()
+    {
+        $users = User::all();
+
+        $pdf = Pdf::loadView('admin.user_pdf', compact('users'))
+                ->setPaper('a4', 'portrait');
+
+        return $pdf->download('data-user.pdf');
+    }
+
+    public function exportExcel()
+    {
+        return Excel::download(new UsersExport, 'data-user.xlsx');
+    }
+
 }
