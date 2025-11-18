@@ -2,64 +2,67 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\pendaftaran;
+use App\Models\Pendaftaran;
 use Illuminate\Http\Request;
 
 class PendaftaranController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $data = Pendaftaran::latest()->get();
+        return view('pendaftaran.index', compact('data'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return view('pendaftaran.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nama' => 'required',
+            'kelas' => 'required',
+            'ekskul' => 'required',
+            'tanggal_daftar' => 'required|date'
+        ]);
+
+        Pendaftaran::create($request->all());
+
+        return redirect()->route('pendaftaran.index')->with('success', 'Data pendaftaran berhasil ditambahkan.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(pendaftaran $pendaftaran)
+    public function show($id)
     {
-        //
+        $item = Pendaftaran::findOrFail($id);
+        return view('pendaftaran.show', compact('item'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(pendaftaran $pendaftaran)
+    public function edit($id)
     {
-        //
+        $item = Pendaftaran::findOrFail($id);
+        return view('pendaftaran.edit', compact('item'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, pendaftaran $pendaftaran)
+    public function update(Request $request, $id)
     {
-        //
+        $item = Pendaftaran::findOrFail($id);
+
+        $request->validate([
+            'nama' => 'required',
+            'kelas' => 'required',
+            'ekskul' => 'required',
+            'tanggal_daftar' => 'required|date'
+        ]);
+
+        $item->update($request->all());
+
+        return redirect()->route('pendaftaran.index')->with('success', 'Data berhasil diperbarui.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(pendaftaran $pendaftaran)
+    public function destroy($id)
     {
-        //
+        Pendaftaran::destroy($id);
+        return redirect()->route('pendaftaran.index')->with('success', 'Data berhasil dihapus.');
     }
 }
