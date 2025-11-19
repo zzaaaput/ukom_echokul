@@ -19,15 +19,10 @@ use Illuminate\Support\Facades\Route;
 | Route Utama (Public)
 |--------------------------------------------------------------------------
 */
-
-// Halaman utama
 Route::get('/', [TemplateController::class, 'index'])->name('home');
-
-// Semua orang bisa melihat daftar anggota
 Route::get('/anggota', [AnggotaController::class, 'index'])->name('anggota.index');
-
-// Semua orang juga bisa melihat daftar ekstrakurikuler
 Route::get('/ekstrakurikuler', [EkstrakurikulerController::class, 'index'])->name('ekstrakurikuler.index');
+Route::view('/visi-misi', 'siswa.visi_misi')->name('visi_misi.index');
 
 // Daftar pembina ekstrakurikuler (opsional untuk publik)
 Route::get('/ekstrakurikuler/pembina-list', [EkstrakurikulerController::class, 'getPembinaList'])

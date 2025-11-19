@@ -25,8 +25,11 @@ class DashboardController extends Controller
     public function siswa()
     {
         $ekstrakurikulers = Ekstrakurikuler::with('pembina')->get();
-        return view('siswa.index', compact('ekstrakurikulers'));
-    }
+    
+        $pembinas = $ekstrakurikulers->pluck('pembina')->flatten()->unique('id');
+    
+        return view('siswa.index', compact('ekstrakurikulers', 'pembinas'));
+    }    
 
     /**
      * DASHBOARD ADMIN — sekarang memakai statistik (card baru)
