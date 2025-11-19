@@ -42,11 +42,10 @@
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="#">Kegiatan</a></li>
             <li><a class="dropdown-item" href="#">Pengumuman</a></li>
-            <li><a class="dropdown-item" href="{{ route('pembina.perlombaan.index') }}">Perlombaan</a></li>
+            <li><a class="dropdown-item" href="{{ route('perlombaan.index') }}">Perlombaan</a></li>
           </ul>
         </li>
 
-        <!-- Aktivitas Menu -->
 <li class="nav-item dropdown">
     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
         Aktivitas
@@ -89,6 +88,16 @@
     </ul>
 </li>
 
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+            Aktivitas
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{{ route('kehadiran.index')}}">Kehadiran</a></li>
+            <li><a class="dropdown-item" href="{{ route('penilaian.index') }}">Penilaian</a></li>
+          </ul>
+        </li>
+      </ul>
 
       <div class="d-flex align-items-center">
         @auth

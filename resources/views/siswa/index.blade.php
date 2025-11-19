@@ -44,7 +44,7 @@
             <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
             <i class="bi bi-bullseye display-3 mb-3"></i>
             <h5 class="fw-bold">VISI MISI</h5>
-            <a href="#" class="btn btn-light mt-3">Selengkapnya</a>
+            <a href="{{ route('visi_misi.index') }}" class="btn btn-light mt-3">Selengkapnya</a>
           </div>
         </div>
       </div>

@@ -84,10 +84,10 @@ class User extends Authenticatable
     | HELPER METHODS
     |--------------------------------------------------------------------------
     */
-public function ekstrakurikulerDipimpin()
-{
-    return $this->hasOne(Ekstrakurikuler::class, 'user_ketua_id');
-}
+    public function ekstrakurikulerDipimpin()
+    {
+        return $this->hasOne(Ekstrakurikuler::class, 'user_ketua_id');
+    }
 
     public function isKetuaOf(int $ekskulId): bool
     {

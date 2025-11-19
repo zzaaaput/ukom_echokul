@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Ekstrakurikuler;
-use App\Models\Kegiatan;
+use App\Models\Perlombaan;
 use App\Models\AnggotaEkstrakurikuler;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
@@ -25,11 +26,13 @@ class DashboardController extends Controller
     public function siswa()
     {
         $ekstrakurikulers = Ekstrakurikuler::with('pembina')->get();
-        return view('siswa.index', compact('ekstrakurikulers'));
-    }
+        $pembinas = $ekstrakurikulers->pluck('pembina')->flatten()->unique('id');
+
+        return view('siswa.index', compact('ekstrakurikulers', 'pembinas'));
+    }    
 
     /**
-     * DASHBOARD ADMIN — sekarang memakai statistik (card baru)
+     * DASHBOARD ADMIN
      */
     public function admin()
     {
@@ -40,59 +43,140 @@ class DashboardController extends Controller
             'totalSiswaRole'  => User::where('role', 'siswa')->count(),
             'totalEkskul'     => Ekstrakurikuler::count(),
             'totalSiswa'      => User::where('role', 'siswa')->count(),
-            'totalPembina'    => User::where('role', 'pembina')->count(),
-            'totalKetua'      => User::where('role', 'ketua')->count(),
-            // 'totalKegiatan'   => Kegiatan::count(),
             'totalAnggota'    => AnggotaEkstrakurikuler::count(),
-            // 'totalPrestasi'   => Kegiatan::where('tipe', 'prestasi')->count(),
         ]);
     }
 
     /**
-     * DASHBOARD PEMBINA — sekarang dengan statistik
+     * DASHBOARD PEMBINA — gabungan dari DashboardPembinaController@index
      */
     public function pembina()
     {
         $pembina = auth()->user();
 
-        $ekstrakurikuler = $pembina->ekstrakurikulerDibina;
+        $ekstrakurikulerList = Ekstrakurikuler::with(['ketua'])
+            ->where('user_pembina_id', $pembina->id)
+            ->get();
 
-        if (!$ekstrakurikuler) {
+        if ($ekstrakurikulerList->isEmpty()) {
             abort(403, 'Anda tidak menjadi pembina ekstrakurikuler.');
         }
 
-        return view('pembina.index', [
-            'ekstrakurikuler'  => $ekstrakurikuler,
-            'anggotaAktif'     => $ekstrakurikuler->anggotaAktif()->count(),
-            // 'totalKegiatan'    => $ekstrakurikuler->kegiatan->count(),
-            // 'totalPrestasi'    => $ekstrakurikuler->kegiatan->where('tipe', 'prestasi')->count(),
-            'totalAnggota'     => $ekstrakurikuler->anggota->count(),
-        ]);
+        $totalEkskul = $ekstrakurikulerList->count();
+        $ekskulIds = $ekstrakurikulerList->pluck('id');
+
+        $totalPerlombaan = Perlombaan::whereIn('ekstrakurikuler_id', $ekskulIds)->count();
+        $perlombaanTahunIni = Perlombaan::whereIn('ekstrakurikuler_id', $ekskulIds)
+            ->whereYear('tanggal', Carbon::now()->year)
+            ->count();
+            $anggotaIds = AnggotaEkstrakurikuler::whereIn('ekstrakurikuler_id', $ekskulIds)
+            ->pluck('user_id');
+        
+        $anggotaList = User::whereIn('id', $anggotaIds)->get();
+        $totalAnggota = $anggotaList->count();        
+        $perlombaanTerbaru = Perlombaan::with(['ekstrakurikuler'])
+            ->whereIn('ekstrakurikuler_id', $ekskulIds)
+            ->orderBy('tanggal', 'desc')
+            ->limit(5)
+            ->get();
+
+        $tingkatSekolah       = Perlombaan::whereIn('ekstrakurikuler_id', $ekskulIds)->where('tingkat', 'Sekolah')->count();
+        $tingkatKecamatan     = Perlombaan::whereIn('ekstrakurikuler_id', $ekskulIds)->where('tingkat', 'Kecamatan')->count();
+        $tingkatKabupaten     = Perlombaan::whereIn('ekstrakurikuler_id', $ekskulIds)->where('tingkat', 'Kabupaten')->count();
+        $tingkatProvinsi      = Perlombaan::whereIn('ekstrakurikuler_id', $ekskulIds)->where('tingkat', 'Provinsi')->count();
+        $tingkatNasional      = Perlombaan::whereIn('ekstrakurikuler_id', $ekskulIds)->where('tingkat', 'Nasional')->count();
+        $tingkatInternasional = Perlombaan::whereIn('ekstrakurikuler_id', $ekskulIds)->where('tingkat', 'Internasional')->count();
+
+        return view('pembina.index', compact(
+            'totalEkskul',
+            'totalPerlombaan',
+            'perlombaanTahunIni',
+            'totalAnggota',
+            'ekstrakurikulerList',
+            'perlombaanTerbaru',
+            'tingkatSekolah',
+            'tingkatKecamatan',
+            'tingkatKabupaten',
+            'tingkatProvinsi',
+            'tingkatNasional',
+            'tingkatInternasional'
+        ));
     }
 
     /**
-     * DASHBOARD KETUA — sekarang dengan statistik lengkap
+     * DASHBOARD KETUA
      */
     public function ketua()
     {
-        $user = auth()->user();
+        $ketuaId = Auth::id();
+        $ekstrakurikuler = Ekstrakurikuler::with(['pembina'])
+            ->where('user_ketua_id', $ketuaId)
+            ->first();
+            if ($ekstrakurikuler) {
+            $ekskulId = $ekstrakurikuler->id;
+            $ekskulId = $ekstrakurikuler->id;
+            $anggotaIds = AnggotaEkstrakurikuler::where('ekstrakurikuler_id', $ekskulId)
+                ->pluck('user_id');
+            $anggotaList = User::whereIn('id', $anggotaIds)->get();
+            $totalAnggota = $anggotaList->count();
+            $totalPerlombaan = Perlombaan::where('ekstrakurikuler_id', $ekskulId)->count();
+            $perlombaanTahunIni = Perlombaan::where('ekstrakurikuler_id', $ekskulId)
+                ->whereYear('tanggal', Carbon::now()->year)
+                ->count();
 
-        if ($user->role !== 'ketua') {
-            abort(403, 'Anda bukan ketua ekstrakurikuler.');
+            $perlombaanTerbaru = Perlombaan::where('ekstrakurikuler_id', $ekskulId)
+                ->orderBy('tanggal', 'desc')
+                ->limit(5)
+                ->get();
+
+            $tingkatSekolah = Perlombaan::where('ekstrakurikuler_id', $ekskulId)
+                ->where('tingkat', 'Sekolah')
+                ->count();
+
+            $tingkatKecamatan = Perlombaan::where('ekstrakurikuler_id', $ekskulId)
+                ->where('tingkat', 'Kecamatan')
+                ->count();
+
+            $tingkatKabupaten = Perlombaan::where('ekstrakurikuler_id', $ekskulId)
+                ->where('tingkat', 'Kabupaten')
+                ->count();
+
+            $tingkatProvinsi = Perlombaan::where('ekstrakurikuler_id', $ekskulId)
+                ->where('tingkat', 'Provinsi')
+                ->count();
+
+            $tingkatNasional = Perlombaan::where('ekstrakurikuler_id', $ekskulId)
+                ->where('tingkat', 'Nasional')
+                ->count();
+
+            $tingkatInternasional = Perlombaan::where('ekstrakurikuler_id', $ekskulId)
+                ->where('tingkat', 'Internasional')
+                ->count();
+        } else {
+            $totalAnggota = 0;
+            $totalPerlombaan = 0;
+            $perlombaanTahunIni = 0;
+            $perlombaanTerbaru = collect();
+            $tingkatSekolah = 0;
+            $tingkatKecamatan = 0;
+            $tingkatKabupaten = 0;
+            $tingkatProvinsi = 0;
+            $tingkatNasional = 0;
+            $tingkatInternasional = 0;
         }
 
-        $ekstrakurikuler = $user->ekstrakurikulerDipimpin;
-
-        if (!$ekstrakurikuler) {
-            abort(403, 'Anda belum terdaftar sebagai ketua di ekstrakurikuler manapun.');
-        }
-
-        return view('ketua.index', [
-            'ekstrakurikuler'  => $ekstrakurikuler,
-            'anggotaAktif'     => $ekstrakurikuler->anggotaAktif()->count(),
-            'anggotaList'      => $ekstrakurikuler->anggotaAktif()->get(),
-            // 'totalKegiatan'    => $ekstrakurikuler->kegiatan->count(),
-            // 'totalPrestasi'    => $ekstrakurikuler->kegiatan->where('tipe', 'prestasi')->count(),
-        ]);
+        return view('ketua.index', compact(
+            'ekstrakurikuler',
+            'totalAnggota',
+            'totalPerlombaan',
+            'perlombaanTahunIni',
+            'perlombaanTerbaru',
+            'tingkatSekolah',
+            'tingkatKecamatan',
+            'tingkatKabupaten',
+            'tingkatProvinsi',
+            'tingkatNasional',
+            'tingkatInternasional'
+        ));
     }
 }
