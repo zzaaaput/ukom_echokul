@@ -1,96 +1,434 @@
 @extends('layouts.template')
 
-@section('title', 'Ketua')
+@section('title', 'Dashboard Ketua')
 
 @section('content')
-<div class="py-6">
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+    <p class=" py-2 mb-2 opacity-75">
+        <i class="bi bi-calendar3 me-2"></i>{{ \Carbon\Carbon::now()->isoFormat('dddd, D MMMM YYYY') }}
+    </p>
 
-        <!-- Header Ekstrakurikuler -->
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-2xl text-gray-800 mb-4">
-                Ekstrakurikuler: {{ $ekstrakurikuler->nama_ekstrakurikuler }}
-            </h2>
-            <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">
-                Tambah Anggota
-            </button>
-        </div>
-
-        <!-- Info Ekskul & Statistik -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="bg-white shadow rounded-lg p-6">
-                <h3 class="text-lg font-medium text-gray-900 mb-2">Info Ekstrakurikuler</h3>
-                <p class="text-gray-600 mb-2">{{ $ekstrakurikuler->deskripsi }}</p>
-                <p class="text-gray-700 font-medium flex items-center">
-                    <img src="{{ asset($ekstrakurikuler->pembina->foto ?? 'storage/images/default-user.png') }}"
-                         alt="Foto Pembina" class="w-10 h-10 rounded-full mr-2 object-cover">
-                    Pembina: {{ $ekstrakurikuler->pembina->nama_lengkap }}
-                </p>
-            </div>
-
-            <div class="flex flex-wrap gap-4">
-                <div class="flex-1 min-w-[150px] bg-green-100 p-4 rounded-lg text-center">
-                    <p class="text-2xl font-bold">{{ $anggotaList->where('status_anggota', 'aktif')->count() }}</p>
-                    <p class="text-gray-700">Anggota Aktif</p>
-                </div>
-                <div class="flex-1 min-w-[150px] bg-blue-100 p-4 rounded-lg text-center">
-                    <p class="text-2xl font-bold">{{ $anggotaList->where('jabatan', 'pengurus')->count() }}</p>
-                    <p class="text-gray-700">Pengurus</p>
-                </div>
-                <div class="flex-1 min-w-[150px] bg-purple-100 p-4 rounded-lg text-center">
-                    <p class="text-2xl font-bold">{{ $anggotaList->where('jabatan', 'ketua')->count() }}</p>
-                    <p class="text-gray-700">Ketua</p>
-                </div>
-                <div class="flex-1 min-w-[150px] bg-gray-100 p-4 rounded-lg text-center">
-                    <p class="text-2xl font-bold">{{ $anggotaList->count() }}</p>
-                    <p class="text-gray-700">Total Anggota</p>
+    <div class="row g-4 mb-4">
+        <div class="col-md-6 col-lg-3">
+            <div class="card border-0 shadow-sm h-100 hover-card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="rounded-3 bg-danger bg-opacity-10 p-3 me-3">
+                            <i class="bi bi-mortarboard-fill fs-2 text-danger"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <p class="text-muted mb-1 small">Ekstrakurikuler</p>
+                            <h3 class="fw-bold mb-0">{{ $ekstrakurikuler->nama_ekstrakurikuler ?? '-' }}</h3>
+                        </div>
+                    </div>
+                    <div class="mt-3 pt-3 border-top">
+                        <small class="text-muted">
+                            <i class="bi bi-shield-check text-danger me-1"></i>
+                            Yang Anda pimpin
+                        </small>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Daftar Anggota -->
-        <div class="bg-white shadow rounded-lg p-6">
-            <h3 class="text-lg font-medium text-gray-900 mb-4">Daftar Anggota</h3>
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead>
-                        <tr>
-                            <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Foto</th>
-                            <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Nama</th>
-                            <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Jabatan</th>
-                            <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Tahun Ajaran</th>
-                            <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-200">
-                        @foreach($anggotaList as $anggota)
-                        <tr>
-                            <td class="px-4 py-2">
-                                <img src="{{ asset($anggota->foto ?? 'storage/images/default-user.png') }}" 
-                                     class="w-10 h-10 rounded-full object-cover">
-                            </td>
-                            <td class="px-4 py-2">{{ $anggota->nama_anggota }}</td>
-                            <td class="px-4 py-2">
-                                <span class="px-2 py-1 rounded-full text-xs font-medium
-                                    {{ $anggota->jabatan === 'ketua' ? 'bg-purple-100 text-purple-800' : 
-                                       ($anggota->jabatan === 'pengurus' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800') }}">
-                                    {{ ucfirst($anggota->jabatan) }}
-                                </span>
-                            </td>
-                            <td class="px-4 py-2">{{ $anggota->tahun_ajaran }}</td>
-                            <td class="px-4 py-2">
-                                <span class="px-2 py-1 rounded-full text-xs font-medium
-                                    {{ $anggota->status_anggota === 'aktif' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                    {{ ucfirst($anggota->status_anggota) }}
-                                </span>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+        <div class="col-md-6 col-lg-3">
+            <div class="card border-0 shadow-sm h-100 hover-card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="rounded-3 bg-primary bg-opacity-10 p-3 me-3">
+                            <i class="bi bi-people-fill fs-2 text-primary"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <p class="text-muted mb-1 small">Total Anggota</p>
+                            <h3 class="fw-bold mb-0">{{ $totalAnggota }}</h3>
+                        </div>
+                    </div>
+                    <div class="mt-3 pt-3 border-top">
+                        <small class="text-muted">
+                            <i class="bi bi-person-plus text-primary me-1"></i>
+                            Anggota aktif
+                        </small>
+                    </div>
+                </div>
             </div>
         </div>
 
+        <div class="col-md-6 col-lg-3">
+            <div class="card border-0 shadow-sm h-100 hover-card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="rounded-3 bg-success bg-opacity-10 p-3 me-3">
+                            <i class="bi bi-trophy-fill fs-2 text-success"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <p class="text-muted mb-1 small">Total Perlombaan</p>
+                            <h3 class="fw-bold mb-0">{{ $totalPerlombaan }}</h3>
+                        </div>
+                    </div>
+                    <div class="mt-3 pt-3 border-top">
+                        <small class="text-muted">
+                            <i class="bi bi-award text-success me-1"></i>
+                            Semua kompetisi
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+            <div class="card border-0 shadow-sm h-100 hover-card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="rounded-3 bg-warning bg-opacity-10 p-3 me-3">
+                            <i class="bi bi-calendar-event fs-2 text-warning"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <p class="text-muted mb-1 small">Tahun Ini</p>
+                            <h3 class="fw-bold mb-0">{{ $perlombaanTahunIni }}</h3>
+                        </div>
+                    </div>
+                    <div class="mt-3 pt-3 border-top">
+                        <small class="text-muted">
+                            <i class="bi bi-graph-up text-warning me-1"></i>
+                            {{ \Carbon\Carbon::now()->year }}
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h5 class="card-title fw-bold mb-4">
+                        <i class="bi bi-lightning-fill text-warning me-2"></i>Quick Actions
+                    </h5>
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <a href="{{ route('perlombaan.index') }}" class="text-decoration-none">
+                                <div class="d-flex align-items-center p-3 bg-light rounded-3 hover-action">
+                                    <div class="rounded bg-danger p-3 me-3">
+                                        <i class="bi bi-trophy text-white fs-4"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-0 fw-semibold text-dark">Kelola Perlombaan</h6>
+                                        <small class="text-muted">Tambah & edit data</small>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="#" class="text-decoration-none">
+                                <div class="d-flex align-items-center p-3 bg-light rounded-3 hover-action">
+                                    <div class="rounded bg-primary p-3 me-3">
+                                        <i class="bi bi-people text-white fs-4"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-0 fw-semibold text-dark">Data Pendaftaran</h6>
+                                        <small class="text-muted">Kelola pendaftaran calon anggota</small>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="#" class="text-decoration-none">
+                                <div class="d-flex align-items-center p-3 bg-light rounded-3 hover-action">
+                                    <div class="rounded bg-success p-3 me-3">
+                                        <i class="bi bi-info-circle text-white fs-4"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-0 fw-semibold text-dark">Jadwal Kegiatan</h6>
+                                        <small class="text-muted">Lihat jadwal</small>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="{{ route('ekstrakurikuler.index') }}" class="text-decoration-none">
+                                <div class="d-flex align-items-center p-3 bg-light rounded-3 hover-action">
+                                    <div class="rounded bg-info p-3 me-3">
+                                        <i class="bi bi-grid text-white fs-4"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-0 fw-semibold text-dark">Pengumuman</h6>
+                                        <small class="text-muted">Lihat semua pengumuman</small>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white border-0 pt-4 pb-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="fw-bold mb-0">
+                            <i class="bi bi-mortarboard text-danger me-2"></i>Ekstrakurikuler Saya
+                        </h5>
+                    </div>
+                </div>
+                <div class="card-body">
+                    @if($ekstrakurikuler)
+                    <div class="text-center mb-4">
+                        @if($ekstrakurikuler->foto && file_exists(public_path($ekstrakurikuler->foto)))
+                            <img src="{{ asset($ekstrakurikuler->foto) }}" 
+                                 class="img-fluid rounded shadow-sm" 
+                                 style="max-height: 200px; width: 100%; object-fit: cover;"
+                                 alt="{{ $ekstrakurikuler->nama_ekstrakurikuler }}">
+                        @else
+                            <div class="rounded d-flex align-items-center justify-content-center mx-auto"
+                                 style="height: 200px; width: 100%; max-width: 400px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                                <i class="bi bi-mortarboard text-white" style="font-size: 5rem;"></i>
+                            </div>
+                        @endif
+                    </div>
+
+                    <div class="bg-light rounded p-4">
+                        <h5 class="fw-bold mb-3">{{ $ekstrakurikuler->nama_ekstrakurikuler }}</h5>
+                        
+                        <div class="row g-3 mb-3">
+                            <div class="col-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-person-badge text-primary fs-4 me-2"></i>
+                                    <div>
+                                        <small class="text-muted d-block">Pembina</small>
+                                        <strong class="small">{{ $ekstrakurikuler->pembina->nama_lengkap ?? 'Belum ada' }}</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-people text-success fs-4 me-2"></i>
+                                    <div>
+                                        <small class="text-muted d-block">Anggota</small>
+                                        <strong class="small">{{ $totalAnggota }} Orang</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <small class="text-muted d-block mb-1">Deskripsi:</small>
+                            <p class="small mb-0">{{ $ekstrakurikuler->deskripsi ?? 'Tidak ada deskripsi' }}</p>
+                        </div>
+
+                        <a href="{{ route('ekstrakurikuler.index') }}" class="btn btn-danger btn-sm w-100">
+                            <i class="bi bi-eye me-2"></i>Lihat Detail Lengkap
+                        </a>
+                    </div>
+                    @else
+                    <div class="text-center py-4">
+                        <i class="bi bi-inbox text-muted" style="font-size: 3rem;"></i>
+                        <p class="text-muted mt-2 mb-0">Anda belum menjadi ketua ekstrakurikuler</p>
+                    </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white border-0 pt-4 pb-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="fw-bold mb-0">
+                            <i class="bi bi-trophy text-success me-2"></i>Perlombaan Terbaru
+                        </h5>
+                    </div>
+                </div>
+                <div class="card-body">
+                    @forelse($perlombaanTerbaru as $perlombaan)
+                    <div class="d-flex align-items-start p-3 mb-3 border rounded-3 hover-perlombaan">
+                        <div class="me-3">
+                            @if($perlombaan->foto && file_exists(storage_path('app/public/' . $perlombaan->foto)))
+                                <img src="{{ asset('storage/' . $perlombaan->foto) }}" 
+                                     class="rounded" 
+                                     style="width: 70px; height: 70px; object-fit: cover;"
+                                     alt="{{ $perlombaan->nama_perlombaan }}">
+                            @else
+                                <div class="rounded d-flex align-items-center justify-content-center"
+                                     style="width: 70px; height: 70px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                                    <i class="bi bi-trophy text-white fs-4"></i>
+                                </div>
+                            @endif
+                        </div>
+                        <div class="flex-grow-1">
+                            <h6 class="mb-1 fw-semibold">{{ $perlombaan->nama_perlombaan }}</h6>
+                            <div class="mb-2">
+                                <small class="text-muted d-block">
+                                    <i class="bi bi-calendar3 me-1"></i>
+                                    {{ \Carbon\Carbon::parse($perlombaan->tanggal)->format('d M Y') }}
+                                </small>
+                                <small class="text-muted">
+                                    <i class="bi bi-geo-alt me-1"></i>
+                                    {{ $perlombaan->tempat ?? '-' }}
+                                </small>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <span class="badge bg-danger bg-opacity-10 text-danger">
+                                    <i class="bi bi-award me-1"></i>{{ $perlombaan->tingkat ?? 'Umum' }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    @empty
+                    <div class="text-center py-4">
+                        <i class="bi bi-trophy text-muted" style="font-size: 3rem;"></i>
+                        <p class="text-muted mt-2 mb-0">Belum ada data perlombaan</p>
+                    </div>
+                    @endforelse
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mt-2">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-0 pt-4 pb-3">
+                    <h5 class="fw-bold mb-0">
+                        <i class="bi bi-bar-chart text-danger me-2"></i>Prestasi Berdasarkan Tingkat
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        @php
+                            $tingkatStats = [
+                                ['name' => 'Sekolah', 'count' => $tingkatSekolah ?? 0, 'icon' => 'building', 'color' => 'primary'],
+                                ['name' => 'Kecamatan', 'count' => $tingkatKecamatan ?? 0, 'icon' => 'map', 'color' => 'success'],
+                                ['name' => 'Kabupaten', 'count' => $tingkatKabupaten ?? 0, 'icon' => 'geo-alt', 'color' => 'info'],
+                                ['name' => 'Provinsi', 'count' => $tingkatProvinsi ?? 0, 'icon' => 'flag', 'color' => 'warning'],
+                                ['name' => 'Nasional', 'count' => $tingkatNasional ?? 0, 'icon' => 'star', 'color' => 'danger'],
+                                ['name' => 'Internasional', 'count' => $tingkatInternasional ?? 0, 'icon' => 'globe', 'color' => 'dark']
+                            ];
+                            $maxCount = max(array_column($tingkatStats, 'count'));
+                        @endphp
+
+                        @foreach($tingkatStats as $stat)
+                        <div class="col-md-4">
+                            <div class="p-3 border rounded-3 h-100 hover-stat">
+                                <div class="d-flex align-items-center justify-content-between mb-3">
+                                    <div class="rounded bg-{{ $stat['color'] }} bg-opacity-10 p-2">
+                                        <i class="bi bi-{{ $stat['icon'] }} fs-5 text-{{ $stat['color'] }}"></i>
+                                    </div>
+                                    <h3 class="fw-bold mb-0 text-{{ $stat['color'] }}">{{ $stat['count'] }}</h3>
+                                </div>
+                                <p class="mb-2 small fw-semibold">{{ $stat['name'] }}</p>
+                                <div class="progress" style="height: 6px;">
+                                    <div class="progress-bar bg-{{ $stat['color'] }}" 
+                                         style="width: {{ $totalPerlombaan > 0 ? ($stat['count'] / $totalPerlombaan * 100) : 0 }}%"></div>
+                                </div>
+                                <small class="text-muted">
+                                    {{ $totalPerlombaan > 0 ? number_format(($stat['count'] / $totalPerlombaan * 100), 1) : 0 }}% dari total
+                                </small>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white border-0 pt-4 pb-3">
+                    <h5 class="fw-bold mb-0">
+                        <i class="bi bi-clipboard-check text-danger me-2"></i>Tugas Ketua
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-danger border-0 mb-3">
+                        <div class="d-flex align-items-start">
+                            <i class="bi bi-star-fill fs-4 me-3"></i>
+                            <div>
+                                <h6 class="fw-bold mb-2">Koordinasi Anggota</h6>
+                                <p class="small mb-0">Pastikan semua anggota aktif mengikuti kegiatan rutin ekstrakurikuler.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-warning border-0 mb-3">
+                        <div class="d-flex align-items-start">
+                            <i class="bi bi-trophy-fill fs-4 me-3"></i>
+                            <div>
+                                <h6 class="fw-bold mb-2">Persiapan Lomba</h6>
+                                <p class="small mb-0">Koordinasikan dengan pembina untuk persiapan perlombaan mendatang.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-success border-0 mb-3">
+                        <div class="d-flex align-items-start">
+                            <i class="bi bi-clipboard-data fs-4 me-3"></i>
+                            <div>
+                                <h6 class="fw-bold mb-2">Update Dokumentasi</h6>
+                                <p class="small mb-0">Lengkapi data perlombaan dan dokumentasi kegiatan secara berkala.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info border-0 mb-0">
+                        <div class="d-flex align-items-start">
+                            <i class="bi bi-people-fill fs-4 me-3"></i>
+                            <div>
+                                <h6 class="fw-bold mb-2">Rapat Rutin</h6>
+                                <p class="small mb-0">Jadwalkan rapat evaluasi dengan pembina dan anggota.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
+
+<style>
+.hover-card {
+    transition: all 0.3s ease;
+}
+
+.hover-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+}
+
+.hover-action {
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.hover-action:hover {
+    transform: translateX(5px);
+    background-color: #e9ecef !important;
+}
+
+.hover-perlombaan {
+    transition: all 0.3s ease;
+}
+
+.hover-perlombaan:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.hover-stat {
+    transition: all 0.3s ease;
+}
+
+.hover-stat:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.bg-gradient {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+</style>
+
 @endsection

@@ -20,10 +20,9 @@
     </div>
 
     <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
-        <form method="GET" action="{{ route('anggota.index') }}" class="d-flex align-items-center gap-2">
+        <form method="GET" action="{{ route('anggota.index') }}" class="d-flex align-items-center gap-2 mb-2 mb-md-0">
             <label for="per_page" class="fw-semibold">Tampilkan:</label>
-            <select name="per_page" id="per_page" class="form-select form-select-sm" 
-                    style="width: 80px;" onchange="this.form.submit()">
+            <select name="per_page" id="per_page" class="form-select form-select-sm" style="width: 80px;" onchange="this.form.submit()">
                 @foreach([10, 20, 30, 50, 100] as $size)
                     <option value="{{ $size }}" {{ request('per_page', 10) == $size ? 'selected' : '' }}>
                         {{ $size }}
@@ -32,26 +31,28 @@
             </select>
         </form>
 
-        {{-- Search bar --}}
-        <form method="GET" action="{{ route('anggota.index') }}" 
-            class="d-flex flex-wrap align-items-center gap-2" 
-            style="max-width: 400px;">
-            
+        <form method="GET" action="{{ route('anggota.index') }}" class="flex-grow-1 mx-2 mb-2 mb-md-0 d-flex">
             <input type="hidden" name="per_page" value="{{ request('per_page', 10) }}">
-            <input type="text" 
-                name="search" 
-                class="form-control flex-grow-1" 
-                placeholder="Cari nama atau jabatan..."
-                value="{{ request('search') }}"
-                onchange="this.form.submit()">
-            
-            @if(request('search'))
+            <input type="text" name="search" class="form-control" placeholder="Cari nama atau jabatan..." value="{{ request('search') }}" onchange="this.form.submit()">
+        </form>
+
+        <form method="GET" action="{{ route('anggota.index') }}" class="d-flex align-items-center gap-2 mb-2 mb-md-0">
+            <input type="hidden" name="per_page" value="{{ request('per_page', 10) }}">
+            <input type="hidden" name="search" value="{{ request('search') }}">
+            <select name="ekstrakurikuler_id" class="form-select form-select-sm" onchange="this.form.submit()">
+                <option value="">-- Semua Ekstrakurikuler --</option>
+                @foreach($ekstrakurikulerList as $eks)
+                    <option value="{{ $eks->id }}" {{ request('ekstrakurikuler_id') == $eks->id ? 'selected' : '' }}>
+                        {{ $eks->nama_ekstrakurikuler }}
+                    </option>
+                @endforeach
+            </select>
+            @if(request('search') || request('ekstrakurikuler_id'))
                 <a href="{{ route('anggota.index') }}" class="btn btn-outline-secondary btn-sm">Reset</a>
             @endif
         </form>
     </div>
 
-    <!-- Table -->
     <div class="card border-0 shadow-sm rounded-3">
         <div class="card-body p-0">
             <div class="table-responsive">

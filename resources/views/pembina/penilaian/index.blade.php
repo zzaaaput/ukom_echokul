@@ -19,13 +19,46 @@
         @endif
     </div>
 
-    <!-- Search -->
-    <div class="mb-3" style="max-width: 300px;">
-        <form method="GET" action="{{ route('pembina.penilaian.index') }}" class="d-flex">
-            <input type="text" name="search" class="form-control"
-                placeholder="Cari anggota / ekskul / semester..."
-                value="{{ request('search') }}"
-                onchange="this.form.submit()">
+    <!-- ========================== FILTER + SEARCH ========================== -->
+    <div class="mb-3">
+        <form method="GET" action="{{ route('penilaian.index') }}" class="row g-2 align-items-center">
+            
+            <!-- Kiri: optional filter tambahan / jumlah data -->
+            <div class="col-md-3 col-12">
+                <select name="per_page" class="form-select" onchange="this.form.submit()">
+                    <option value="10" {{ request('per_page') == 10 ? 'selected' : '' }}>10 per halaman</option>
+                    <option value="25" {{ request('per_page') == 25 ? 'selected' : '' }}>25 per halaman</option>
+                    <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>50 per halaman</option>
+                    <option value="100" {{ request('per_page') == 100 ? 'selected' : '' }}>100 per halaman</option>
+                </select>
+            </div>
+
+            <!-- Tengah: search -->
+            <div class="col-md-6 col-12">
+                <input type="text" name="search" class="form-control" placeholder="Cari anggota / ekskul / semester..."
+                    value="{{ request('search') }}" onchange="this.form.submit()">
+            </div>
+
+            <!-- Kanan: filter per ekskul dan semester -->
+            <div class="col-md-3 col-12 d-flex gap-2">
+                <select name="ekstrakurikuler_id" class="form-select" onchange="this.form.submit()">
+                    <option value="">-- Semua Ekskul --</option>
+                    @foreach($ekstrakurikulerList as $e)
+                        <option value="{{ $e->id }}" {{ request('ekstrakurikuler_id') == $e->id ? 'selected' : '' }}>
+                            {{ $e->nama_ekstrakurikuler }}
+                        </option>
+                    @endforeach
+                </select>
+
+                <select name="semester" class="form-select" onchange="this.form.submit()">
+                    <option value="">-- Semua Semester --</option>
+                    @for($i=1; $i<=6; $i++)
+                        <option value="{{ $i }}" {{ request('semester') == $i ? 'selected' : '' }}>
+                            Semester {{ $i }}
+                        </option>
+                    @endfor
+                </select>
+            </div>
         </form>
     </div>
 
@@ -66,8 +99,7 @@
                                     <i class="bi bi-eye"></i> Detail
                                 </button>
 
-                                @if(Auth::user()->role === 'pembina')
-                                <!-- Edit -->
+                                @if(Auth::check() && Auth::user()->role === 'pembina')
                                 <button class="btn btn-sm fw-semibold text-white me-1"
                                     style="background-color:#dfa700;"
                                     data-bs-toggle="modal"
@@ -148,28 +180,47 @@
 
                                         <div class="modal-body">
 
-                                            <div class="mb-3">
-                                                <label class="fw-semibold">Anggota</label>
-                                                <select name="anggota_id" id="selectAnggota" class="form-control" required>
+                                        <div class="mb-3">
+                                            <label class="fw-semibold">Anggota</label>
+                                            <select name="anggota_id" class="form-control" required>
+                                                <option value="">-- Pilih Anggota --</option>
+                                                @if(Auth::check() && Auth::user()->role === 'pembina')
                                                     @foreach($anggota as $a)
-                                                    <option value="{{ $a->id }}"
-                                                        {{ $item->anggota_id == $a->id ? 'selected' : '' }}>
-                                                        {{ $a->user->nama ?? $a->nama_anggota }}
-                                                    </option>
+                                                        @if($a->ekstrakurikuler_id == $pembinaEkskul->id)
+                                                            <option value="{{ $a->id }}"
+                                                                {{ isset($item) && $item->anggota_id == $a->id ? 'selected' : '' }}>
+                                                                {{ $a->user->nama ?? $a->nama_anggota }}
+                                                            </option>
+                                                        @endif
                                                     @endforeach
-                                                </select>
-                                            </div>
+                                                @else
+                                                    {{-- Semua anggota --}}
+                                                    @foreach($anggota as $a)
+                                                        <option value="{{ $a->id }}"
+                                                            {{ isset($item) && $item->anggota_id == $a->id ? 'selected' : '' }}>
+                                                            {{ $a->user->nama ?? $a->nama_anggota }}
+                                                        </option>
+                                                    @endforeach
+                                                @endif
+                                            </select>
+                                        </div>
 
                                             <div class="mb-3">
                                                 <label class="fw-semibold">Ekstrakurikuler</label>
-                                                <select name="ekstrakurikuler_id" class="form-control" required>
-                                                    @foreach($ekstra as $e)
-                                                    <option value="{{ $e->id }}"
-                                                        {{ $item->ekstrakurikuler_id == $e->id ? 'selected' : '' }}>
-                                                        {{ $e->nama_ekstrakurikuler }}
-                                                    </option>
-                                                    @endforeach
-                                                </select>
+                                                @if(Auth::check() && Auth::user()->role === 'pembina')
+                                                    <input type="text" class="form-control" 
+                                                        value="{{ $item->ekstrakurikuler->nama_ekstrakurikuler ?? '' }}" readonly>
+                                                    <input type="hidden" name="ekstrakurikuler_id" 
+                                                        value="{{ $item->ekstrakurikuler_id }}">
+                                                @else
+                                                    <select name="ekstrakurikuler_id" class="form-control" required>
+                                                        @foreach($ekstrakurikulerList as $e)
+                                                            <option value="{{ $e->id }}" {{ $item->ekstrakurikuler_id == $e->id ? 'selected' : '' }}>
+                                                                {{ $e->nama_ekstrakurikuler }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                @endif
                                             </div>
 
                                             <div class="mb-3">
@@ -302,24 +353,45 @@
 
                 <div class="modal-body">
 
+                    <!-- Bagian dropdown Ekstrakurikuler di modal tambah -->
+                    <div class="mb-3">
+                        <label class="fw-semibold">Ekstrakurikuler</label>
+                        @if(Auth::check() && Auth::user()->role === 'pembina')
+                            {{-- Tampilkan readonly input untuk pembina --}}
+                            <input type="text" class="form-control" 
+                                value="{{ $pembinaEkskul->nama_ekstrakurikuler ?? '' }}" readonly>
+                            <input type="hidden" name="ekstrakurikuler_id" 
+                                value="{{ $pembinaEkskul->id ?? '' }}">
+                        @else
+                            {{-- Dropdown untuk admin / guest --}}
+                            <select name="ekstrakurikuler_id" class="form-control" required>
+                                @foreach($ekstrakurikulerList as $e)
+                                    <option value="{{ $e->id }}">{{ $e->nama_ekstrakurikuler }}</option>
+                                @endforeach
+                            </select>
+                        @endif
+                    </div>
+
+                    <!-- Bagian dropdown Anggota di modal tambah -->
                     <div class="mb-3">
                         <label class="fw-semibold">Anggota</label>
                         <select name="anggota_id" class="form-control" required>
                             <option value="">-- Pilih Anggota --</option>
-                            @foreach($anggota as $a)
-                                <option value="{{ $a->id }}">
-                                    {{ $a->user->nama ?? $a->nama_anggota }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="fw-semibold">Ekstrakurikuler</label>
-                        <select name="ekstrakurikuler_id" class="form-control" required>
-                            @foreach($ekstra as $e)
-                            <option value="{{ $e->id }}">{{ $e->nama_ekstrakurikuler }}</option>
-                            @endforeach
+                            @if(Auth::check() && Auth::user()->role === 'pembina' && $pembinaEkskul)
+                                @foreach($anggota as $a)
+                                    @if($a->ekstrakurikuler_id == $pembinaEkskul->id)
+                                        <option value="{{ $a->id }}">
+                                            {{ $a->user->nama ?? $a->nama_anggota }}
+                                        </option>
+                                    @endif
+                                @endforeach
+                            @else
+                                @foreach($anggota as $a)
+                                    <option value="{{ $a->id }}">
+                                        {{ $a->user->nama ?? $a->nama_anggota }}
+                                    </option>
+                                @endforeach
+                            @endif
                         </select>
                     </div>
 

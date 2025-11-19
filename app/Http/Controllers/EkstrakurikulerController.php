@@ -44,8 +44,19 @@ public function index(Request $request)
     $ekstrakurikuler = $query->paginate(10)->appends($request->query());
     $pembina = User::where('role', 'pembina')->orderBy('nama_lengkap')->get();
     $ketua   = User::where('role', 'ketua')->orderBy('nama_lengkap')->get();
+    $totalPembina = Ekstrakurikuler::whereNotNull('user_pembina_id')->distinct('user_pembina_id')->count('user_pembina_id');
+    $totalKetua = Ekstrakurikuler::whereNotNull('user_ketua_id')->distinct('user_ketua_id')->count('user_ketua_id');
 
-    return view('admin.ekstrakurikuler', compact('ekstrakurikuler', 'pembina', 'ketua', 'sort', 'direction'));
+        return view('admin.ekstrakurikuler', compact(
+            'ekstrakurikuler', 
+            'pembina', 
+            'ketua', 
+            'sort', 
+            'direction',
+            'ekstrakurikuler',
+            'totalPembina',
+            'totalKetua'
+        ));
 }
 
     public function store(Request $request)

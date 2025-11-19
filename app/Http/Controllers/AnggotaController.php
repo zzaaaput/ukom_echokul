@@ -13,41 +13,51 @@ class AnggotaController extends Controller
     public function index(Request $request)
     {
         $perPage = $request->get('per_page', 10);
-
+    
         // Dapatkan ekskul yang diasuh oleh pembina login (jika pembina)
         $pembinaEkskul = null;
         if (Auth::check() && Auth::user()->role === 'pembina') {
             $pembinaEkskul = Ekstrakurikuler::where('user_pembina_id', Auth::id())->first();
         }
-
+    
         // Query dasar anggota
         $query = AnggotaEkstrakurikuler::with(['user', 'ekstrakurikuler'])
             ->orderBy('ekstrakurikuler_id')
             ->orderBy('jabatan', 'asc');
-
+    
         // 🔒 Jika pembina login → filter anggota hanya dari ekskul yang ia bimbing
         if (Auth::check() && Auth::user()->role === 'pembina' && $pembinaEkskul) {
             $query->where('ekstrakurikuler_id', $pembinaEkskul->id);
         }
-
+    
         // 🔍 Fitur pencarian
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('nama_anggota', 'like', "%$search%")
-                    ->orWhere('jabatan', 'like', "%$search%");
+                  ->orWhere('jabatan', 'like', "%$search%");
             });
         }
-
+    
+        // 🔹 Filter berdasarkan dropdown ekskul (hanya jika bukan pembina atau ingin override)
+        if ($request->filled('ekstrakurikuler_id')) {
+            $query->where('ekstrakurikuler_id', $request->ekstrakurikuler_id);
+        }
+    
+        // Pagination
         $anggota = $query->paginate($perPage)
-            ->appends(['search' => $request->search, 'per_page' => $perPage]);
-
-        $users = User::where('role', 'siswa')
-            ->orderBy('nama_lengkap')
-            ->get();
-
-        return view('pembina.anggota_index', compact('anggota', 'users', 'pembinaEkskul'));
-    }
+            ->appends([
+                'search' => $request->search,
+                'per_page' => $perPage,
+                'ekstrakurikuler_id' => $request->ekstrakurikuler_id,
+            ]);
+    
+        // Data tambahan untuk modal
+        $users = User::where('role', 'siswa')->orderBy('nama_lengkap')->get();
+        $ekstrakurikulerList = Ekstrakurikuler::all();
+    
+        return view('pembina.anggota_index', compact('anggota', 'users', 'pembinaEkskul', 'ekstrakurikulerList'));
+    }    
 
     public function store(Request $request)
     {

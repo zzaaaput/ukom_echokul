@@ -23,6 +23,9 @@ Route::get('/', [TemplateController::class, 'index'])->name('home');
 Route::get('/anggota', [AnggotaController::class, 'index'])->name('anggota.index');
 Route::get('/ekstrakurikuler', [EkstrakurikulerController::class, 'index'])->name('ekstrakurikuler.index');
 Route::view('/visi-misi', 'siswa.visi_misi')->name('visi_misi.index');
+Route::get('/penilaian', [PenilaianController::class, 'index'])->name('penilaian.index');
+Route::get('/perlombaan', [PerlombaanController::class, 'index'])->name('perlombaan.index');
+Route::get('/kehadiran', [KehadiranController::class, 'index'])->name('kehadiran.index');
 
 // Daftar pembina ekstrakurikuler (opsional untuk publik)
 Route::get('/ekstrakurikuler/pembina-list', [EkstrakurikulerController::class, 'getPembinaList'])
@@ -67,23 +70,21 @@ Route::prefix('pembina')->middleware(['auth', 'role:pembina'])->group(function (
     Route::put('anggota/{id}', [AnggotaController::class, 'update'])->name('pembina.anggota.update');
     Route::delete('anggota/{id}', [AnggotaController::class, 'destroy'])->name('pembina.anggota.destroy');
 
-    // CRUD Penilaian
-    Route::resource('penilaian', PenilaianController::class)
-        ->names('pembina.penilaian');
+    Route::get('penilaian', [PenilaianController::class, 'index'])->name('pembina.penilaian.index');
+    Route::post('penilaian', [PenilaianController::class, 'store'])->name('pembina.penilaian.store');
+    Route::put('penilaian/{id}', [PenilaianController::class, 'update'])->name('pembina.penilaian.update');
+    Route::delete('penilaian/{id}', [PenilaianController::class, 'destroy'])->name('pembina.penilaian.destroy');
 
-    // CRUD Perlombaan
-    Route::resource('perlombaan', PerlombaanController::class)
-        ->names('pembina.perlombaan');
-    // CRUD Kehadiran
-    Route::resource('kehadiran', KehadiranController::class)
-        ->names('pembina.kehadiran');
-
+    Route::get('perlombaan', [PerlombaanController::class, 'index'])->name('pembina.perlombaan.index');
+    Route::post('perlombaan', [PerlombaanController::class, 'store'])->name('pembina.perlombaan.store');
+    Route::put('perlombaan/{id}', [PerlombaanController::class, 'update'])->name('pembina.perlombaan.update');
+    Route::delete('perlombaan/{id}', [PerlombaanController::class, 'destroy'])->name('pembina.perlombaan.destroy');
 });
 
-Route::prefix('pembina')->middleware(['auth', 'role:pembina'])->name('pembina.')->group(function () {
-    Route::get('penilaian', [\App\Http\Controllers\PenilaianController::class, 'index'])
-        ->name('penilaian.index');
-});
+// Route::prefix('pembina')->middleware(['auth', 'role:pembina'])->name('pembina.')->group(function () {
+//     Route::get('penilaian', [\App\Http\Controllers\PenilaianController::class, 'index'])
+//         ->name('penilaian.index');
+// });
 
 
 /*
