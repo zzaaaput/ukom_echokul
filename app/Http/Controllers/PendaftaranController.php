@@ -10,7 +10,7 @@ class PendaftaranController extends Controller
     public function index()
     {
         $data = Pendaftaran::latest()->get();
-        return view('pendaftaran.index', compact('data'));
+        return view('pembina.pendaftaran.index', compact('data'));
     }
 
     public function create()

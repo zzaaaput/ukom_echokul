@@ -97,18 +97,35 @@ public function index(Request $request)
         $ekskul = Ekstrakurikuler::findOrFail($id);
 
         $validator = Validator::make($request->all(), [
-            'user_pembina_id'      => 'required|exists:users,id',
-            'user_ketua_id'        => 'nullable|exists:users,id',
-            'nama_ekstrakurikuler' => 'required|string|max:255',
-            'deskripsi'            => 'nullable|string',
-            'foto'                 => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'user_pembina_id'       => 'required|exists:users,id',
+            'user_ketua_id'         => 'nullable|exists:users,id',
+            'nama_ekstrakurikuler'  => 'required|string|max:255',
+            'deskripsi'             => 'nullable|string',
+
+            'pendaftaran_dibuka'    => 'nullable|boolean',
+            'pendaftaran_mulai'     => 'nullable|date',
+            'pendaftaran_selesai'   => 'nullable|date|after_or_equal:pendaftaran_mulai',
+
+            'foto'                  => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();
         }
 
-        $data = $request->only(['user_pembina_id', 'user_ketua_id', 'nama_ekstrakurikuler', 'deskripsi']);
+        $data = $request->only([
+            'user_pembina_id',
+            'user_ketua_id',
+            'nama_ekstrakurikuler',
+            'deskripsi',
+        ]);
+
+        $data['pendaftaran_dibuka']   = $request->has('pendaftaran_dibuka')
+                                            ? (bool)$request->pendaftaran_dibuka
+                                            : false;
+
+        $data['pendaftaran_mulai']    = $request->pendaftaran_mulai ?: null;
+        $data['pendaftaran_selesai']  = $request->pendaftaran_selesai ?: null;
 
         if ($request->hasFile('foto')) {
             if ($ekskul->foto && file_exists(public_path($ekskul->foto))) {
@@ -119,7 +136,8 @@ public function index(Request $request)
 
         $ekskul->update($data);
 
-        return redirect()->route('ekstrakurikuler.index')->with('success', 'Ekstrakurikuler berhasil diperbarui.');
+        return redirect()->route('ekstrakurikuler.index')
+            ->with('success', 'Ekstrakurikuler berhasil diperbarui.');
     }
 
     public function destroy($id)

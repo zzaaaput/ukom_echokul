@@ -29,8 +29,7 @@
             Daftar
           </a>
           <ul class="dropdown-menu">
-          <li><a class="dropdown-item" href="#">Daftar Ekstrakurikuler</a></li>
-          <li><a class="dropdown-item" href="{{ route('ekstrakurikuler.index') }}">Ekstrakurikuler</a></li>
+            <li><a class="dropdown-item" href="{{ route('ekstrakurikuler.index') }}">Ekstrakurikuler</a></li>
             <li><a class="dropdown-item" href="{{ route('anggota.index') }}">Anggota</a></li>
           </ul>
         </li>
@@ -40,53 +39,11 @@
             Informasi
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Kegiatan</a></li>
+            <li><a class="dropdown-item" href="{{ route('kegiatan.index') }}">Kegiatan</a></li>
             <li><a class="dropdown-item" href="#">Pengumuman</a></li>
             <li><a class="dropdown-item" href="{{ route('perlombaan.index') }}">Perlombaan</a></li>
           </ul>
         </li>
-
-<li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-        Aktivitas
-    </a>
-
-    <ul class="dropdown-menu">
-
-        {{-- Jika role pembina --}}
-        @if(Auth::user()->role === 'pembina')
-            <li>
-                <a class="dropdown-item" href="{{ route('pembina.kehadiran.index') }}">
-                    Kehadiran
-                </a>
-            </li>
-            <li>
-                <a class="dropdown-item" href="{{ route('pembina.perlombaan.index') }}">
-                    Perlombaan
-                </a>
-            </li>
-            <li>
-                <a class="dropdown-item" href="{{ route('pembina.penilaian.index') }}">
-                    Penilaian
-                </a>
-            </li>
-        @endif
-
-        {{-- Jika role siswa --}}
-        @if(Auth::user()->role === 'siswa')
-            <li>
-                <a a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                    Aktivitas
-                </a>
-            </li>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="{{ route('siswa.kehadiran.index') }}">Kehadiran</a></li>
-              <li><a class="dropdown-item" href="{{ route('siswa.penilaian.index') }}">Penilaian</a></li>
-            </ul>
-        @endif 
-
-    </ul>
-</li>
 
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
@@ -118,6 +75,7 @@
 
                     <li><a class="dropdown-item" href="{{ route('profile.edit') }}">Edit Profil</a></li>
                     <li><a class="dropdown-item" href="{{ route('profile.password') }}">Edit Password</a></li>
+                    <li><a class="dropdown-item" href="{{ route('profile.pendaftaran') }}">Pendaftaran</a></li>
 
                     <li><hr class="dropdown-divider"></li>
 

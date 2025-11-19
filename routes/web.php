@@ -12,6 +12,7 @@ use App\Http\Controllers\KegiatanController;
 use App\Http\Controllers\PenilaianController;
 use App\Http\Controllers\PerlombaanController;
 use App\Http\Controllers\KehadiranController;
+use App\Http\Controllers\PendaftaranApprovalController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,15 +20,17 @@ use Illuminate\Support\Facades\Route;
 | Route Utama (Public)
 |--------------------------------------------------------------------------
 */
-Route::get('/', [TemplateController::class, 'index'])->name('home');
+Route::get('/', [DashboardController::class, 'index'])->name('home');
 Route::get('/anggota', [AnggotaController::class, 'index'])->name('anggota.index');
 Route::get('/ekstrakurikuler', [EkstrakurikulerController::class, 'index'])->name('ekstrakurikuler.index');
 Route::view('/visi-misi', 'siswa.visi_misi')->name('visi_misi.index');
 Route::get('/penilaian', [PenilaianController::class, 'index'])->name('penilaian.index');
 Route::get('/perlombaan', [PerlombaanController::class, 'index'])->name('perlombaan.index');
 Route::get('/kehadiran', [KehadiranController::class, 'index'])->name('kehadiran.index');
+Route::get('/kegiatan', [KegiatanController::class, 'index'])->name('kegiatan.index');
+Route::post('/pendaftaran', [PendaftaranController::class, 'store'])->name('pendaftaran.store');
+Route::get('/profile/pendaftaran', [PendaftaranController::class, 'index'])->name('profile.pendaftaran');
 
-// Daftar pembina ekstrakurikuler (opsional untuk publik)
 Route::get('/ekstrakurikuler/pembina-list', [EkstrakurikulerController::class, 'getPembinaList'])
     ->name('ekstrakurikuler.pembina-list');
 
@@ -79,6 +82,15 @@ Route::prefix('pembina')->middleware(['auth', 'role:pembina'])->group(function (
     Route::post('perlombaan', [PerlombaanController::class, 'store'])->name('pembina.perlombaan.store');
     Route::put('perlombaan/{id}', [PerlombaanController::class, 'update'])->name('pembina.perlombaan.update');
     Route::delete('perlombaan/{id}', [PerlombaanController::class, 'destroy'])->name('pembina.perlombaan.destroy');
+
+    Route::get('kegiatan', [KegiatanController::class, 'index'])->name('pembina.kegiatan.index');
+    Route::post('kegiatan', [KegiatanController::class, 'store'])->name('pembina.kegiatan.store');
+    Route::put('kegiatan/{id}', [KegiatanController::class, 'update'])->name('pembina.kegiatan.update');
+    Route::delete('kegiatan/{id}', [KegiatanController::class, 'destroy'])->name('pembina.kegiatan.destroy');
+
+    Route::get('/pendaftaran', [PendaftaranApprovalController::class, 'index'])->name('pendaftaran.index');
+    Route::post('/pendaftaran/{pendaftaran}/approve', [PendaftaranApprovalController::class, 'approve'])->name('pendaftaran.approve');
+    Route::post('/pendaftaran/{pendaftaran}/reject', [PendaftaranApprovalController::class, 'reject'])->name('pendaftaran.reject');
 });
 
 // Route::prefix('pembina')->middleware(['auth', 'role:pembina'])->name('pembina.')->group(function () {

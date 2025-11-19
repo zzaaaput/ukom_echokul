@@ -64,7 +64,11 @@ class User extends Authenticatable
 
     public function ekstrakurikulerDibina()
     {
-        return $this->hasOne(Ekstrakurikuler::class, 'user_pembina_id');
+        return $this->belongsTo(Ekstrakurikuler::class, 'ekstrakurikuler_id'. 'pembina_id');
+    }
+    public function isPembinaOf($ekskulId)
+    {
+        return $this->ekstrakurikulerDibina()->where('id', $ekskulId)->exists();
     }
 
     public function keanggotaan()
@@ -107,4 +111,9 @@ class User extends Authenticatable
             default => 'dashboard.siswa.index',
         };
     }
+    public function pendaftarans()
+    {
+        return $this->hasMany(Pendaftaran::class);
+    }
+
 }

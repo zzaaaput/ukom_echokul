@@ -9,6 +9,16 @@ use Illuminate\Validation\Rules;
 
 class ProfileController extends Controller
 {
+    public function index()
+    {
+        $data = PendaftaranController::with('ekstrakurikuler')
+            ->where('user_id', auth()->id())
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('pendaftaran.index', compact('data'));
+    }
+
     public function edit()
     {
         $user = Auth::user();

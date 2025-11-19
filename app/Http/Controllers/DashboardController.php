@@ -17,19 +17,28 @@ class DashboardController extends Controller
      */
     public function index()
     {
+        if (!auth()->check()) {
+            $ekstrakurikulers = Ekstrakurikuler::with('pembina')->get();
+            $pembinas = Ekstrakurikuler::whereHas('pembina', function($q){
+                $q->where('role', 'pembina');
+            })->with('pembina')->get();
+    
+            return view('siswa.index', compact('ekstrakurikulers', 'pembinas'));        }
+
         return redirect()->route(auth()->user()->getDashboardRoute());
     }
-
     /**
      * DASHBOARD SISWA
      */
     public function siswa()
     {
         $ekstrakurikulers = Ekstrakurikuler::with('pembina')->get();
-        $pembinas = $ekstrakurikulers->pluck('pembina')->flatten()->unique('id');
+        $pembinas = Ekstrakurikuler::whereHas('pembina', function($q){
+            $q->where('role', 'pembina');
+        })->with('pembina')->get();
 
         return view('siswa.index', compact('ekstrakurikulers', 'pembinas'));
-    }    
+    } 
 
     /**
      * DASHBOARD ADMIN

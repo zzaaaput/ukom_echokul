@@ -7,7 +7,7 @@ $routeName = request()->route()->getName();
 $showHeader = $routeName != 'dashboard.siswa.index' && $routeName != 'home';
 
 if ($showHeader) {
-    $backgroundImage = asset('storage/images/dashboard/background.png');
+    $backgroundImage = asset('storage/images/background.png');
 
     // Judul dan deskripsi dinamis per route
     $headers = [
