@@ -181,4 +181,27 @@ class PenilaianController extends Controller
 
         return back()->with('success', 'Data berhasil dihapus');
     }
+    public function penilaianSiswa()
+    {
+    $user = Auth::user();
+
+    // Cari apakah siswa terdaftar sebagai anggota ekskul
+    $anggota = AnggotaEkstrakurikuler::where('user_id', $user->id)->first();
+
+    if (!$anggota) {
+        return back()->with('error', 'Anda belum terdaftar dalam ekstrakurikuler manapun.');
+    }
+
+    // Ambil data penilaian berdasarkan anggota siswa
+    $penilaian = Penilaian::with(['ekstrakurikuler'])
+        ->where('anggota_id', $anggota->id)
+        ->orderBy('id', 'DESC')
+        ->get();
+
+    return view('siswa.penilaian.index', [
+        'penilaian' => $penilaian,
+        'anggota' => $anggota,
+    ]);
+}
+
 }

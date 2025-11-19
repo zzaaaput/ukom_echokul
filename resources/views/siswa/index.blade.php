@@ -107,12 +107,12 @@
 <section class="container my-5">
     <h3 class="text-center mb-4 fw-bold">Pembina Ekstrakurikuler</h3>
 
-    @if($pembinas->isEmpty())
+    @if($pembina->isEmpty())
         <p class="text-center text-muted">Belum ada data pembina ekstrakurikuler.</p>
     @else
         <div id="carouselPembina" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
             <div class="carousel-inner">
-                @foreach ($pembinas->chunk(3) as $index => $chunk)
+                @foreach ($pembina->chunk(3) as $index => $chunk)
                     <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
                         <div class="row justify-content-center">
                             @foreach ($chunk as $pembina)

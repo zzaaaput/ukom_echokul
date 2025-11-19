@@ -47,16 +47,48 @@
         </li>
 
         <!-- Aktivitas Menu -->
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-            Aktivitas
-          </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="{{ route('pembina.kehadiran.index')}}">Kehadiran</a></li>
-            <li><a class="dropdown-item" href="{{ route('pembina.penilaian.index') }}">Penilaian</a></li>
-          </ul>
-        </li>
-      </ul>
+<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+        Aktivitas
+    </a>
+
+    <ul class="dropdown-menu">
+
+        {{-- Jika role pembina --}}
+        @if(Auth::user()->role === 'pembina')
+            <li>
+                <a class="dropdown-item" href="{{ route('pembina.kehadiran.index') }}">
+                    Kehadiran
+                </a>
+            </li>
+            <li>
+                <a class="dropdown-item" href="{{ route('pembina.perlombaan.index') }}">
+                    Perlombaan
+                </a>
+            </li>
+            <li>
+                <a class="dropdown-item" href="{{ route('pembina.penilaian.index') }}">
+                    Penilaian
+                </a>
+            </li>
+        @endif
+
+        {{-- Jika role siswa --}}
+        @if(Auth::user()->role === 'siswa')
+            <li>
+                <a a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                    Aktivitas
+                </a>
+            </li>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="{{ route('siswa.kehadiran.index') }}">Kehadiran</a></li>
+              <li><a class="dropdown-item" href="{{ route('siswa.penilaian.index') }}">Penilaian</a></li>
+            </ul>
+        @endif 
+
+    </ul>
+</li>
+
 
       <div class="d-flex align-items-center">
         @auth

@@ -7,14 +7,14 @@ use App\Models\Ekstrakurikuler;
 
 class TemplateController extends Controller
 {
-    public function index()
+       public function index()
     {
-        $pembinas = Ekstrakurikuler::with('pembina')
+        $pembina = Ekstrakurikuler::with('pembina')
             ->whereHas('pembina', function ($q) {
                 $q->where('role', 'pembina');
             })
             ->get();
 
-        return view('siswa.index', compact('pembinas'));
+        return view('siswa.index', compact('pembina'));
     }
 }
