@@ -7,29 +7,29 @@ $routeName = request()->route()->getName();
 $showHeader = $routeName != 'dashboard.siswa.index' && $routeName != 'home';
 
 if ($showHeader) {
-    $backgroundImage = asset('storage/images/background.png');
+$backgroundImage = asset('storage/images/background.png');
 
-    // Judul dan deskripsi dinamis per route
-    $headers = [
-        'dashboard.pembina.index' => ['title' => 'Dashboard Pembina', 'desc' => 'Selamat datang di dashboard pembina'],
-        'dashboard.ketua.index' => ['title' => 'Dashboard Ketua', 'desc' => 'Kelola data pendaftaran, perlombaan, kegiatan, pengumuman'],
-        'dashboard.siswa.index' => ['title' => 'Dashboard', 'desc' => 'Akses informasi dan kegiatan siswa.'],
-        'anggota.index' => ['title' => 'Anggota', 'desc' => 'Daftar siswa yang mengikuti ekstrakurikuler'],
-        'ekstrakurikuler.index' => ['title' => 'Ekstrakurikuler', 'desc' => 'Ekstrakurikuler yang ada di SMKN 1 Kota Bekasi'],
-        'ekstrakurikuler.pembina-list' => ['title' => 'Pembina Ekstrakurikuler', 'desc' => 'Daftar pembina untuk setiap ekstrakurikuler'],
-        'admin.user.index' => ['title' => 'User', 'desc' => 'Kelola data pengguna'],
-        'profile.edit' => ['title' => 'Edit Profil', 'desc' => 'Perbarui informasi profil Anda.'],
-    ];
+// Judul dan deskripsi dinamis per route
+$headers = [
+'dashboard.pembina.index' => ['title' => 'Dashboard Pembina', 'desc' => 'Selamat datang di dashboard pembina'],
+'dashboard.ketua.index' => ['title' => 'Dashboard Ketua', 'desc' => 'Kelola data pendaftaran, perlombaan, kegiatan, pengumuman'],
+'dashboard.siswa.index' => ['title' => 'Dashboard', 'desc' => 'Akses informasi dan kegiatan siswa.'],
+'anggota.index' => ['title' => 'Anggota', 'desc' => 'Daftar siswa yang mengikuti ekstrakurikuler'],
+'ekstrakurikuler.index' => ['title' => 'Ekstrakurikuler', 'desc' => 'Ekstrakurikuler yang ada di SMKN 1 Kota Bekasi'],
+'ekstrakurikuler.pembina-list' => ['title' => 'Pembina Ekstrakurikuler', 'desc' => 'Daftar pembina untuk setiap ekstrakurikuler'],
+'admin.user.index' => ['title' => 'User', 'desc' => 'Kelola data pengguna'],
+'profile.edit' => ['title' => 'Edit Profil', 'desc' => 'Perbarui informasi profil Anda.'],
+];
 
-    $currentHeader = $headers[$routeName] ?? [
-        'title' => Str::title(str_replace('.', ' ', $routeName)),
-        'desc' => 'Platform inovatif untuk eksplorasi dan pembelajaran yang menarik. Temukan pengalaman baru bersama kami.'
-    ];
+$currentHeader = $headers[$routeName] ?? [
+'title' => Str::title(str_replace('.', ' ', $routeName)),
+'desc' => 'Platform inovatif untuk eksplorasi dan pembelajaran yang menarik. Temukan pengalaman baru bersama kami.'
+];
 
-    $eksPembina = null;
-    if (auth()->check() && auth()->user()->role == 'pembina') {
-        $eksPembina = \App\Models\Ekstrakurikuler::where('user_pembina_id', auth()->id())->first();
-    }
+$eksPembina = null;
+if (auth()->check() && auth()->user()->role == 'pembina') {
+$eksPembina = \App\Models\Ekstrakurikuler::where('user_pembina_id', auth()->id())->first();
+}
 }
 @endphp
 
@@ -41,11 +41,11 @@ if ($showHeader) {
         <h1 class="text-white h2 fw-bold mb-2">{{ $currentHeader['title'] }}</h1>
 
         @if(in_array($routeName, ['dashboard.pembina.index', 'anggota.index']) && $eksPembina)
-            <p class="text-white-50 mb-0">
-                Ekstrakurikuler: <strong>{{ $eksPembina->nama_ekstrakurikuler }}</strong>
-            </p>
+        <p class="text-white-50 mb-0">
+            Ekstrakurikuler: <strong>{{ $eksPembina->nama_ekstrakurikuler }}</strong>
+        </p>
         @elseif($routeName == 'dashboard.pembina.index' && !$eksPembina)
-            <p class="text-white-50 mb-0"><strong>(Belum memiliki ekstrakurikuler)</strong></p>
+        <p class="text-white-50 mb-0"><strong>(Belum memiliki ekstrakurikuler)</strong></p>
         @endif
 
         <hr class="w-25 border border-white border-2 rounded mb-3">
