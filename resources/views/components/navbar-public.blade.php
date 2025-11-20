@@ -40,7 +40,7 @@
           </a>
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="{{ route('kegiatan.index') }}">Kegiatan</a></li>
-            <li><a class="dropdown-item" href="#">Pengumuman</a></li>
+            <li><a class="dropdown-item" href="{{ route('pengumuman.index') }}">Pengumuman</a></li>
             <li><a class="dropdown-item" href="{{ route('perlombaan.index') }}">Perlombaan</a></li>
           </ul>
         </li>
@@ -75,7 +75,9 @@
 
                     <li><a class="dropdown-item" href="{{ route('profile.edit') }}">Edit Profil</a></li>
                     <li><a class="dropdown-item" href="{{ route('profile.password') }}">Edit Password</a></li>
-                    <li><a class="dropdown-item" href="{{ route('profile.pendaftaran') }}">Pendaftaran</a></li>
+                    @if(Auth::user()->role === 'siswa')
+                        <li><a class="dropdown-item" href="{{ route('profile.pendaftaran') }}">Pendaftaran</a></li>
+                    @endif
 
                     <li><hr class="dropdown-divider"></li>
 

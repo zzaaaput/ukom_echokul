@@ -13,7 +13,6 @@ class Pengumuman extends Model
 
     protected $fillable = [
         'user_id',
-        'ekstrakurikuler_id',
         'judul_pengumuman',
         'isi',
         'tanggal',
@@ -25,8 +24,4 @@ class Pengumuman extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function ekstrakurikuler()
-    {
-        return $this->belongsTo(Ekstrakurikuler::class);
-    }
 }

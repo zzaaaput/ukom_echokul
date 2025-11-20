@@ -29,6 +29,7 @@ Route::get('/perlombaan', [PerlombaanController::class, 'index'])->name('perlomb
 Route::get('/kehadiran', [KehadiranController::class, 'index'])->name('kehadiran.index');
 Route::get('/kegiatan', [KegiatanController::class, 'index'])->name('kegiatan.index');
 Route::get('/pengumuman', [PengumumanController::class, 'index'])->name('pengumuman.index');
+Route::get('/pengumuman/{id}', [PengumumanController::class, 'show'])->name('pengumuman.show');
 Route::post('/pendaftaran', [PendaftaranController::class, 'store'])->name('pendaftaran.store');
 Route::get('/profile/pendaftaran', [PendaftaranController::class, 'index'])->name('profile.pendaftaran');
 
@@ -55,9 +56,15 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('users/export/pdf', [UserController::class, 'exportPdf'])->name('admin.users.export.pdf');
 
     // Modul Ratna
-    Route::resource('pendaftaran', PendaftaranController::class);
     Route::resource('pengumuman', PengumumanController::class);
     Route::resource('kegiatan', KegiatanController::class);
+
+    // Pengumuman
+    Route::get('pengumuman', [PengumumanController::class, 'index'])->name('admin.pengumuman.index');
+    Route::post('pengumuman', [PengumumanController::class, 'store'])->name('admin.pengumuman.store');
+    Route::put('pengumuman/{id}', [PengumumanController::class, 'update'])->name('admin.pengumuman.update');
+    Route::delete('pengumuman/{id}', [PengumumanController::class, 'destroy'])->name('admin.pengumuman.destroy');
+
 });
 
 /*
@@ -90,12 +97,6 @@ Route::prefix('pembina')->middleware(['auth', 'role:pembina'])->group(function (
     Route::put('kegiatan/{id}', [KegiatanController::class, 'update'])->name('pembina.kegiatan.update');
     Route::delete('kegiatan/{id}', [KegiatanController::class, 'destroy'])->name('pembina.kegiatan.destroy');
 
-    // Pengumuman
-    Route::get('pengumuman', [PengumumanController::class, 'index'])->name('pembina.pengumuman.index');
-    Route::post('pengumuman', [PengumumanController::class, 'store'])->name('pembina.pengumuman.store');
-    Route::put('pengumuman/{id}', [PengumumanController::class, 'update'])->name('pembina.pengumuman.update');
-    Route::delete('pengumuman/{id}', [PengumumanController::class, 'destroy'])->name('pembina.pengumuman.destroy');
-
     // Pendaftaran approval
     Route::get('/pendaftaran', [PendaftaranApprovalController::class, 'index'])->name('pendaftaran.index');
     Route::post('/pendaftaran/{pendaftaran}/approve', [PendaftaranApprovalController::class, 'approve'])->name('pendaftaran.approve');
@@ -108,14 +109,13 @@ Route::prefix('pembina')->middleware(['auth', 'role:pembina'])->group(function (
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'verified'])->group(function () {
-    // Dashboard redirect sesuai role
     Route::get('/dashboard', function () {
         return match (auth()->user()->role) {
             'admin'   => redirect()->route('dashboard.admin.index'),
             'pembina' => redirect()->route('dashboard.pembina.index'),
             'ketua'   => redirect()->route('dashboard.ketua.index'),
             default   => redirect()->route('dashboard.siswa.index'),
-        };
+        }; 
     })->name('dashboard');
 
     // Profil
