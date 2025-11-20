@@ -9,7 +9,7 @@ class Pendaftaran extends Model
 {
     use HasFactory;
 
-    protected $table = 'pendaftaran'; // sesuai migrationmu
+    protected $table = 'pendaftaran'; 
 
     protected $fillable = [
         'user_id',
@@ -29,7 +29,7 @@ class Pendaftaran extends Model
 
     public function ekstrakurikuler()
     {
-        return $this->belongsTo(Ekstrakurikuler::class);
+        return $this->belongsTo(Ekstrakurikuler::class, 'ekstrakurikuler_id');
     }
 
     public function disetujuiOleh()

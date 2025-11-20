@@ -111,7 +111,7 @@ class User extends Authenticatable
             default => 'dashboard.siswa.index',
         };
     }
-    public function pendaftarans()
+    public function pendaftaran()
     {
         return $this->hasMany(Pendaftaran::class);
     }

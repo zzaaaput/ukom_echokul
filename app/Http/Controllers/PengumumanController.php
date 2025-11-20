@@ -3,61 +3,135 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pengumuman;
+use App\Models\Ekstrakurikuler;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class PengumumanController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $data = Pengumuman::latest()->paginate(10);
-        return view('pengumuman.index', compact('data'));
+        $perPage = $request->get('per_page', 12);
+        $search  = $request->search;
+        $user    = Auth::user();
+
+        $pembinaEkskul = null;
+        if ($user?->role === 'pembina') {
+            $pembinaEkskul = Ekstrakurikuler::where('user_pembina_id', $user->id)->first();
+        }
+
+        $query = Pengumuman::with('ekstrakurikuler');
+
+        if ($pembinaEkskul) {
+            $query->where('ekstrakurikuler_id', $pembinaEkskul->id);
+        }
+
+        if ($user?->role === 'siswa' && $user->ekstrakurikuler_id) {
+            $query->where('ekstrakurikuler_id', $user->ekstrakurikuler_id);
+        }
+
+        if ($request->filled('ekstrakurikuler_id')) {
+            $query->where('ekstrakurikuler_id', $request->ekstrakurikuler_id);
+        }
+
+        if ($search) {
+            $query->where('judul_pengumuman', 'like', "%$search%");
+        }
+
+        $pengumuman = $query->orderBy('tanggal', 'desc')
+            ->paginate($perPage)
+            ->appends([
+                'search' => $search,
+                'per_page' => $perPage,
+                'ekstrakurikuler_id' => $request->ekstrakurikuler_id,
+            ]);
+
+        $ekskul = $pembinaEkskul ? collect([$pembinaEkskul]) : Ekstrakurikuler::all();
+
+        return view('pengumuman.index', compact('pengumuman', 'ekskul', 'pembinaEkskul'));
     }
 
     public function create()
     {
-        return view('pengumuman.create');
+        $user = Auth::user();
+
+        if ($user->role === 'pembina') {
+            $ekskul = collect([$user->ekstrakurikulerDibina]);
+        } elseif ($user->role === 'ketua') {
+            $ekskul = collect([$user->ekstrakurikulerDipimpin]);
+        } else {
+            $ekskul = Ekstrakurikuler::all();
+        }
+
+        return view('pengumuman.create', compact('ekskul'));
     }
 
     public function store(Request $request)
     {
-        $request->validate([
-            'judul' => 'required',
-            'isi' => 'required',
+        $data = $request->validate([
+            'ekstrakurikuler_id' => 'required',
+            'judul_pengumuman'   => 'required',
+            'isi'                => 'required',
+            'tanggal'            => 'nullable|date',
+            'foto'               => 'nullable|image|max:2048',
         ]);
 
-        Pengumuman::create($request->all());
+        if ($request->hasFile('foto')) {
+            $data['foto'] = $request->file('foto')->store('pengumuman', 'public');
+        }
 
-        return redirect()->route('pengumuman.index')->with('success', 'Pengumuman berhasil ditambahkan');
-    }
+        $data['user_id'] = Auth::id();
 
-    public function show($id)
-    {
-        $pengumuman = Pengumuman::findOrFail($id);
-        return view('pengumuman.show', compact('pengumuman'));
+        Pengumuman::create($data);
+
+        return redirect()->route('pengumuman.index')
+            ->with('success', 'Pengumuman berhasil ditambahkan!');
     }
 
     public function edit($id)
     {
         $pengumuman = Pengumuman::findOrFail($id);
-        return view('pengumuman.edit', compact('pengumuman'));
+        $ekskul = Ekstrakurikuler::all();
+
+        return view('pengumuman.edit', compact('pengumuman', 'ekskul'));
     }
 
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'judul' => 'required',
-            'isi' => 'required',
+        $pengumuman = Pengumuman::findOrFail($id);
+
+        $data = $request->validate([
+            'ekstrakurikuler_id' => 'required',
+            'judul_pengumuman'   => 'required',
+            'isi'                => 'required',
+            'tanggal'            => 'nullable|date',
+            'foto'               => 'nullable|image|max:2048',
         ]);
 
-        $pengumuman = Pengumuman::findOrFail($id);
-        $pengumuman->update($request->all());
+        if ($request->hasFile('foto')) {
+            if ($pengumuman->foto) {
+                Storage::disk('public')->delete($pengumuman->foto);
+            }
+            $data['foto'] = $request->file('foto')->store('pengumuman', 'public');
+        }
 
-        return redirect()->route('pengumuman.index')->with('success', 'Pengumuman berhasil diperbarui');
+        $pengumuman->update($data);
+
+        return redirect()->route('pengumuman.index')
+            ->with('success', 'Pengumuman berhasil diperbarui!');
     }
 
     public function destroy($id)
     {
-        Pengumuman::destroy($id);
-        return redirect()->route('pengumuman.index')->with('success', 'Pengumuman berhasil dihapus');
+        $pengumuman = Pengumuman::findOrFail($id);
+
+        if ($pengumuman->foto) {
+            Storage::disk('public')->delete($pengumuman->foto);
+        }
+
+        $pengumuman->delete();
+
+        return back()->with('success', 'Pengumuman berhasil dihapus!');
     }
 }

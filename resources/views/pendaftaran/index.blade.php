@@ -22,7 +22,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($pendaftarans as $item)
+            @foreach($pendaftaran as $item)
             <tr>
                 <td>{{ $loop->iteration }}</td>
                 <td>{{ $item->user->name }}</td>

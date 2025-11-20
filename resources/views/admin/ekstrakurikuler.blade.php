@@ -154,20 +154,9 @@
                             <div class="mb-3">
                                 <label for="pendaftaran_dibuka" class="form-label">Buka Pendaftaran</label>
                                 <select name="pendaftaran_dibuka" id="pendaftaran_dibuka" class="form-control">
-                                    <option value="0" {{ !$ekstrakurikuler->pendaftaran_dibuka ? 'selected' : '' }}>Tutup</option>
-                                    <option value="1" {{ $ekstrakurikuler->pendaftaran_dibuka ? 'selected' : '' }}>Buka</option>
+                                    <option value="0">Tutup</option>
+                                    <option value="1">Buka</option>
                                 </select>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="pendaftaran_mulai" class="form-label">Tanggal Mulai Pendaftaran</label>
-                                    <input type="date" name="pendaftaran_mulai" id="pendaftaran_mulai" class="form-control" value="{{ old('pendaftaran_mulai', $ekstrakurikuler->pendaftaran_mulai ? $ekstrakurikuler->pendaftaran_mulai->format('Y-m-d') : '') }}">
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="pendaftaran_selesai" class="form-label">Tanggal Selesai Pendaftaran</label>
-                                    <input type="date" name="pendaftaran_selesai" id="pendaftaran_selesai" class="form-control" value="{{ old('pendaftaran_selesai', $ekstrakurikuler->pendaftaran_selesai ? $ekstrakurikuler->pendaftaran_selesai->format('Y-m-d') : '') }}">
-                                </div>
                             </div>
 
                             <div class="mb-3">
@@ -324,7 +313,6 @@
                               </div>
                           </div>
 
-                          <!-- Quick Action Buttons -->
                           <div class="mt-3 d-flex flex-wrap gap-2">
                               <span class="text-muted small">Cepat:</span>
                               <a href="{{ route('ekstrakurikuler.index') }}" 
