@@ -48,10 +48,9 @@ class PendaftaranController extends Controller
             'tanggal_daftar' => now(),
         ];
 
-        // Simpan file ke storage/images/pendaftaran
         if ($request->hasFile('surat_keterangan_ortu')) {
             $data['surat_keterangan_ortu'] = 
-                $request->file('surat_keterangan_ortu')->store('images/pendaftaran', 'public');
+                $request->file('surat_keterangan_ortu')->store('storage/images/pendaftaran', 'public');
         }
 
         Pendaftaran::create($data);
@@ -104,7 +103,7 @@ class PendaftaranController extends Controller
             }
 
             $pendaftaran->surat_keterangan_ortu =
-                $request->file('surat_keterangan_ortu')->store('images/pendaftaran', 'public');
+                $request->file('surat_keterangan_ortu')->store('storage/images/pendaftaran', 'public');
         }
 
         $pendaftaran->ekstrakurikuler_id = $request->ekstrakurikuler_id;
