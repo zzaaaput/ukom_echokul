@@ -291,7 +291,7 @@
                         </div>
 
                         <div class="col-md-4">
-                            <a href="{{ route('pembina.anggota.index') }}" class="text-decoration-none">
+                            <a href="{{ route('admin.pengumuman.index') }}" class="text-decoration-none">
                                 <div class="d-flex align-items-center p-4 bg-light rounded-3 shadow-sm hover-action" style="transition: transform 0.2s;">
                                     <div class="rounded-circle bg-secondary p-3 me-3">
                                         <i class="bi bi-megaphone text-white fs-4"></i>

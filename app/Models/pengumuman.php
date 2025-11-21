@@ -23,5 +23,10 @@ class Pengumuman extends Model
     {
         return $this->belongsTo(User::class);
     }
-
+    
+    // Jika Anda memiliki kolom ekstrakurikuler_id di tabel pengumuman
+    // public function ekstrakurikuler()
+    // {
+    //     return $this->belongsTo(Ekstrakurikuler::class);
+    // }
 }

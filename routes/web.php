@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\EkstrakurikulerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AnggotaController;
@@ -17,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| Route Utama (Public)
+| Route Utama (Public - bisa diakses semua orang)
 |--------------------------------------------------------------------------
 */
 Route::get('/', [DashboardController::class, 'index'])->name('home');
@@ -28,26 +27,27 @@ Route::get('/penilaian', [PenilaianController::class, 'index'])->name('penilaian
 Route::get('/perlombaan', [PerlombaanController::class, 'index'])->name('perlombaan.index');
 Route::get('/kehadiran', [KehadiranController::class, 'index'])->name('kehadiran.index');
 Route::get('/kegiatan', [KegiatanController::class, 'index'])->name('kegiatan.index');
-Route::get('/pengumuman', [PengumumanController::class, 'index'])->name('pengumuman.index');
+
+// ✅ Pengumuman publik: hanya lihat
+Route::get('/pengumuman', [PengumumanController::class, 'indexPublik'])->name('pengumuman.index');
 Route::get('/pengumuman/{id}', [PengumumanController::class, 'show'])->name('pengumuman.show');
+
 Route::post('/pendaftaran', [PendaftaranController::class, 'store'])->name('pendaftaran.store');
 Route::get('/profile/pendaftaran', [PendaftaranController::class, 'index'])->name('profile.pendaftaran');
-
-Route::get('/ekstrakurikuler/pembina-list', [EkstrakurikulerController::class, 'getPembinaList'])
-    ->name('ekstrakurikuler.pembina-list');
+Route::get('/ekstrakurikuler/pembina-list', [EkstrakurikulerController::class, 'getPembinaList'])->name('ekstrakurikuler.pembina-list');
 
 /*
 |--------------------------------------------------------------------------
-| Route Admin
+| Route Admin (role: admin)
 |--------------------------------------------------------------------------
 */
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
-    // CRUD Ekstrakurikuler
+    // Ekstrakurikuler
     Route::post('ekstrakurikuler', [EkstrakurikulerController::class, 'store'])->name('admin.ekstrakurikuler.store');
     Route::put('ekstrakurikuler/{id}', [EkstrakurikulerController::class, 'update'])->name('admin.ekstrakurikuler.update');
     Route::delete('ekstrakurikuler/{id}', [EkstrakurikulerController::class, 'destroy'])->name('admin.ekstrakurikuler.destroy');
 
-    // Manajemen User
+    // User Management
     Route::get('user', [UserController::class, 'index'])->name('admin.user.index');
     Route::post('user', [UserController::class, 'store'])->name('admin.user.store');
     Route::get('user/{id}/edit', [UserController::class, 'edit'])->name('admin.user.edit');
@@ -55,21 +55,21 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::delete('user/{id}', [UserController::class, 'destroy'])->name('admin.user.destroy');
     Route::get('users/export/pdf', [UserController::class, 'exportPdf'])->name('admin.users.export.pdf');
 
-    // Modul Ratna
-    Route::resource('pengumuman', PengumumanController::class);
-    Route::resource('kegiatan', KegiatanController::class);
+    // Kegiatan (admin)
+    Route::resource('kegiatan', KegiatanController::class)->names('admin.kegiatan');
 
-    // Pengumuman
-    Route::get('pengumuman', [PengumumanController::class, 'index'])->name('admin.pengumuman.index');
+    // ✅ Pengumuman Admin: CRUD semua
+    Route::get('pengumuman', [PengumumanController::class, 'indexAdmin'])->name('admin.pengumuman.index');
+    Route::get('pengumuman/create', [PengumumanController::class, 'create'])->name('admin.pengumuman.create');
     Route::post('pengumuman', [PengumumanController::class, 'store'])->name('admin.pengumuman.store');
+    Route::get('pengumuman/{id}/edit', [PengumumanController::class, 'edit'])->name('admin.pengumuman.edit');
     Route::put('pengumuman/{id}', [PengumumanController::class, 'update'])->name('admin.pengumuman.update');
     Route::delete('pengumuman/{id}', [PengumumanController::class, 'destroy'])->name('admin.pengumuman.destroy');
-
 });
 
 /*
 |--------------------------------------------------------------------------
-| Route Pembina
+| Route Pembina (role: pembina)
 |--------------------------------------------------------------------------
 */
 Route::prefix('pembina')->middleware(['auth', 'role:pembina'])->group(function () {
@@ -97,15 +97,23 @@ Route::prefix('pembina')->middleware(['auth', 'role:pembina'])->group(function (
     Route::put('kegiatan/{id}', [KegiatanController::class, 'update'])->name('pembina.kegiatan.update');
     Route::delete('kegiatan/{id}', [KegiatanController::class, 'destroy'])->name('pembina.kegiatan.destroy');
 
-    // Pendaftaran approval
-    Route::get('/pendaftaran', [PendaftaranApprovalController::class, 'index'])->name('pendaftaran.index');
-    Route::post('/pendaftaran/{pendaftaran}/approve', [PendaftaranApprovalController::class, 'approve'])->name('pendaftaran.approve');
-    Route::post('/pendaftaran/{pendaftaran}/reject', [PendaftaranApprovalController::class, 'reject'])->name('pendaftaran.reject');
+    // ✅ Pengumuman Pembina: CRUD milik sendiri
+    Route::get('pengumuman', [PengumumanController::class, 'pembinaIndex'])->name('pembina.pengumuman.index');
+    Route::get('pengumuman/create', [PengumumanController::class, 'pembinaCreate'])->name('pembina.pengumuman.create');
+    Route::post('pengumuman', [PengumumanController::class, 'pembinaStore'])->name('pembina.pengumuman.store');
+    Route::get('pengumuman/{id}/edit', [PengumumanController::class, 'pembinaEdit'])->name('pembina.pengumuman.edit');
+    Route::put('pengumuman/{id}', [PengumumanController::class, 'pembinaUpdate'])->name('pembina.pengumuman.update');
+    Route::delete('pengumuman/{id}', [PengumumanController::class, 'pembinaDestroy'])->name('pembina.pengumuman.destroy');
+
+    // Pendaftaran Approval
+    Route::get('pendaftaran', [PendaftaranApprovalController::class, 'index'])->name('pembina.pendaftaran.index');
+    Route::post('pendaftaran/{pendaftaran}/approve', [PendaftaranApprovalController::class, 'approve'])->name('pembina.pendaftaran.approve');
+    Route::post('pendaftaran/{pendaftaran}/reject', [PendaftaranApprovalController::class, 'reject'])->name('pembina.pendaftaran.reject');
 });
 
 /*
 |--------------------------------------------------------------------------
-| Route Dashboard & Profil
+| Route Dashboard & Profil (Auth)
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -115,7 +123,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             'pembina' => redirect()->route('dashboard.pembina.index'),
             'ketua'   => redirect()->route('dashboard.ketua.index'),
             default   => redirect()->route('dashboard.siswa.index'),
-        }; 
+        };
     })->name('dashboard');
 
     // Profil
@@ -125,7 +133,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profile/password', [ProfileController::class, 'password'])->name('profile.password');
     Route::post('/profile/password/update', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
 
-    // Pendaftaran siswa
+    // Pendaftaran (siswa)
     Route::middleware(['role:siswa'])->group(function () {
         Route::get('/profile/pendaftaran', [PendaftaranController::class, 'index'])->name('profile.pendaftaran');
         Route::get('/profile/pendaftaran/{id}', [PendaftaranController::class, 'show'])->name('profile.pendaftaran.show');
@@ -138,11 +146,8 @@ Route::middleware('role:pembina')->get('/pembina', [DashboardController::class, 
 Route::middleware('role:ketua')->get('/ketua', [DashboardController::class, 'ketua'])->name('dashboard.ketua.index');
 Route::middleware('role:siswa')->get('/siswa', [DashboardController::class, 'siswa'])->name('dashboard.siswa.index');
 
-// Route khusus siswa untuk pengumuman
-Route::prefix('siswa')->middleware(['auth', 'role:siswa'])->group(function () {
-    Route::get('/pengumuman', [PengumumanController::class, 'index'])->name('pengumuman.index');
-});
-
+// ✅ Siswa tetap pakai route publik, jadi tidak perlu duplikat
+// Route khusus siswa untuk pengumuman dihapus karena sudah covered oleh route publik
 
 /*
 |--------------------------------------------------------------------------
