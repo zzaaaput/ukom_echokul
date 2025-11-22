@@ -1,6 +1,6 @@
 @extends('layouts.template')
 
-@section('title', 'Perlombaan')
+@section('title', 'Kegiatan')
 
 @section('content')
     @if(Auth::check() && in_array(Auth::user()->role, ['pembina', 'ketua']))

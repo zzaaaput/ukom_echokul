@@ -170,73 +170,7 @@
         @endif
     </section>
 
-    <button id="goTopBtn" title="Go To Up"></button>
-
-        <style>
-        .card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-        }
-
-        #goTopBtn {
-        position: fixed;
-        bottom: 30px;
-        right: 30px;
-        z-index: 99;
-        background-color: #2f3539;
-        color: white;
-        border: none;
-        width: 50px;
-        height: 50px;
-        border-radius: 10px;
-        cursor: pointer;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-        display: none;
-        transition: all 0.3s ease;
-        }
-
-        #goTopBtn:hover {
-        background-color: #444;
-        transform: translateY(-3px);
-        }
-
-        #goTopBtn::before {
-        content: "↑";
-        font-size: 20px;
-        }
-
-        #goTopBtn:hover::after {
-        content: "Go to top";
-        position: absolute;
-        bottom: 60px;
-        right: 0;
-        background: #333;
-        color: #fff;
-        padding: 4px 8px;
-        border-radius: 4px;
-        font-size: 12px;
-        white-space: nowrap;
-        }
-    </style>
-
-    <script>
-        var goTopBtn = document.getElementById("goTopBtn");
-
-        window.addEventListener("scroll", () => {
-        if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
-            goTopBtn.style.display = "block";
-        } else {
-            goTopBtn.style.display = "none";
-        }
-        });
-
-        goTopBtn.addEventListener("click", () => {
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth"
-        });
-        });
-    </script>
+    
 </div>
 
 @endsection

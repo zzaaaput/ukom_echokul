@@ -69,6 +69,11 @@ Route::prefix('pembina')->middleware(['auth', 'role:pembina'])->group(function (
     Route::put('perlombaan/{id}', [PerlombaanController::class, 'update'])->name('pembina.perlombaan.update');
     Route::delete('perlombaan/{id}', [PerlombaanController::class, 'destroy'])->name('pembina.perlombaan.destroy');
 
+    Route::get('kehadiran', [KehadiranController::class, 'index'])->name('pembina.kehadiran.index');
+    Route::post('kehadiran', [KehadiranController::class, 'store'])->name('pembina.kehadiran.store');
+    Route::put('kehadiran/{id}', [KehadiranController::class, 'update'])->name('pembina.kehadiran.update');
+    Route::delete('kehadiran/{id}', [KehadiranController::class, 'destroy'])->name('pembina.kehadiran.destroy');
+
     Route::get('kegiatan', [KegiatanController::class, 'index'])->name('pembina.kegiatan.index');
     Route::post('kegiatan', [KegiatanController::class, 'store'])->name('pembina.kegiatan.store');
     Route::put('kegiatan/{id}', [KegiatanController::class, 'update'])->name('pembina.kegiatan.update');
@@ -82,11 +87,10 @@ Route::prefix('pembina')->middleware(['auth', 'role:pembina'])->group(function (
     Route::delete('pengumuman/{id}', [PengumumanController::class, 'pembinaDestroy'])->name('pembina.pengumuman.destroy');
 
     Route::post('/ketua/pendaftaran/{id}/approve', [DashboardController::class, 'disetujui'])
-    ->name('pendaftaran.approve');
+        ->name('pendaftaran.approve');
 
     Route::post('/ketua/pendaftaran/{id}/reject', [DashboardController::class, 'reject'])
         ->name('pendaftaran.reject');
-
 });
 
 

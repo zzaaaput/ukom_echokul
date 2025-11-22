@@ -112,7 +112,7 @@
                                         <i class="bi bi-eye me-1"></i> Detail
                                     </button>
 
-                                    @if(Auth::user()->role === 'pembina')
+                                    
                                         <button class="btn btn-sm btn-warning"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#modalEdit{{ $item->id }}">
@@ -124,7 +124,7 @@
                                                 data-bs-target="#modalHapus{{ $item->id }}">
                                             <i class="bi bi-trash me-1"></i> Hapus
                                         </button>
-                                    @endif
+                                    
                                 </div>
                             </td>
                         </tr>
