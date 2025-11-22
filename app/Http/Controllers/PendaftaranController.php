@@ -40,16 +40,20 @@ class PendaftaranController extends Controller
             'surat_keterangan_ortu' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048'
         ]);
 
+        // Tahun ajaran otomatis (contoh: 2025/2026)
+        $tahunAjaran = date('Y') . '/' . (date('Y') + 1);
+
         $data = [
             'user_id' => Auth::id(),
             'ekstrakurikuler_id' => $request->ekstrakurikuler_id,
             'alasan' => $request->alasan,
             'status' => 'menunggu',
             'tanggal_daftar' => now(),
+            'tahun_ajaran' => $tahunAjaran, 
         ];
 
         if ($request->hasFile('surat_keterangan_ortu')) {
-            $data['surat_keterangan_ortu'] = 
+            $data['surat_keterangan_ortu'] =
                 $request->file('surat_keterangan_ortu')->store('storage/images/pendaftaran', 'public');
         }
 

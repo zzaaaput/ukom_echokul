@@ -28,7 +28,7 @@ class PengumumanController extends Controller
         $pengumuman = $query->paginate(10);
         $ekskul = Ekstrakurikuler::all();
 
-        return view('pengumuman.index', compact('pengumuman', 'ekskul'));
+        return view('admin.pengumuman', compact('pengumuman', 'ekskul'));
     }
 
     /**
@@ -64,115 +64,6 @@ class PengumumanController extends Controller
         return view('admin.pengumuman', compact('pengumuman', 'sort', 'direction', 'totalUsers'));
     }
 
-    /**
-     * Daftar pengumuman khusus pembina
-     */
-    public function pembinaIndex(Request $request)
-    {
-        $query = Pengumuman::where('user_id', Auth::id());
-
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where('judul_pengumuman', 'like', "%$search%");
-        }
-
-        $pengumuman = $query->orderBy('tanggal', 'desc')->paginate(10);
-
-        return view('pembina.pengumuman.index', compact('pengumuman'));
-    }
-
-    /**
-     * Form tambah pengumuman pembina
-     */
-    public function pembinaCreate()
-    {
-        return view('pembina.pengumuman.create');
-    }
-
-    /**
-     * Simpan pengumuman pembina
-     */
-    public function pembinaStore(Request $request)
-    {
-        $data = $request->validate([
-            'judul_pengumuman' => 'required',
-            'isi'              => 'required',
-            'tanggal'          => 'nullable|date',
-            'foto'             => 'nullable|image|max:2048',
-        ]);
-
-        if ($request->hasFile('foto')) {
-            $file = $request->file('foto');
-            $path = $file->storeAs('public/images/pengumuman', time().'_'.$file->getClientOriginalName());
-            $data['foto'] = str_replace('public/', 'storage/', $path);
-        }
-
-        $data['user_id'] = Auth::id();
-        Pengumuman::create($data);
-
-        return redirect()->route('pembina.pengumuman.index')
-                         ->with('success', 'Pengumuman berhasil ditambahkan!');
-    }
-
-    /**
-     * Edit pengumuman pembina
-     */
-    public function pembinaEdit($id)
-    {
-        $pengumuman = Pengumuman::where('user_id', Auth::id())->findOrFail($id);
-        return view('pembina.pengumuman.edit', compact('pengumuman'));
-    }
-
-    /**
-     * Update pengumuman pembina
-     */
-    public function pembinaUpdate(Request $request, $id)
-    {
-        $pengumuman = Pengumuman::where('user_id', Auth::id())->findOrFail($id);
-
-        $data = $request->validate([
-            'judul_pengumuman' => 'required|string|max:255',
-            'isi'              => 'required|string',
-            'tanggal'          => 'nullable|date',
-            'foto'             => 'nullable|image|max:2048',
-        ]);
-
-        if ($request->hasFile('foto')) {
-            if ($pengumuman->foto) {
-                $oldPath = str_replace('storage/', 'public/', $pengumuman->foto);
-                Storage::delete($oldPath);
-            }
-            $file = $request->file('foto');
-            $path = $file->storeAs('public/images/pengumuman', time().'_'.$file->getClientOriginalName());
-            $data['foto'] = str_replace('public/', 'storage/', $path);
-        }
-
-        $pengumuman->update($data);
-
-        return redirect()->route('pembina.pengumuman.index')
-                         ->with('success', 'Pengumuman berhasil diperbarui!');
-    }
-
-    /**
-     * Hapus pengumuman pembina
-     */
-    public function pembinaDestroy($id)
-    {
-        $pengumuman = Pengumuman::where('user_id', Auth::id())->findOrFail($id);
-
-        if ($pengumuman->foto) {
-            $oldPath = str_replace('storage/', 'public/', $pengumuman->foto);
-            Storage::delete($oldPath);
-        }
-
-        $pengumuman->delete();
-
-        return back()->with('success', 'Pengumuman berhasil dihapus!');
-    }
-
-    /**
-     * Form tambah pengumuman (admin)
-     */
     public function create()
     {
         return view('admin.pengumuman.create');

@@ -101,63 +101,67 @@
         <div class="col-12">
             <div class="card border-0 shadow-sm">
                 <div class="card-body p-4">
-                    <h5 class="card-title fw-bold mb-4">
-                        <i class="bi bi-lightning-fill text-warning me-2"></i>Quick Actions
-                    </h5>
-                    <div class="row g-3">
-                        <div class="col-md-3">
-                            <a href="{{ route('perlombaan.index') }}" class="text-decoration-none">
-                                <div class="d-flex align-items-center p-3 bg-light rounded-3 hover-action">
-                                    <div class="rounded bg-danger p-3 me-3">
-                                        <i class="bi bi-trophy text-white fs-4"></i>
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-0 fw-semibold text-dark">Kelola Perlombaan</h6>
-                                        <small class="text-muted">Tambah & edit data</small>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="col-md-3">
-                            <a href="#" class="text-decoration-none">
-                                <div class="d-flex align-items-center p-3 bg-light rounded-3 hover-action">
-                                    <div class="rounded bg-primary p-3 me-3">
-                                        <i class="bi bi-people text-white fs-4"></i>
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-0 fw-semibold text-dark">Data Pendaftaran</h6>
-                                        <small class="text-muted">Kelola pendaftaran calon anggota</small>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="col-md-3">
-                            <a href="#" class="text-decoration-none">
-                                <div class="d-flex align-items-center p-3 bg-light rounded-3 hover-action">
-                                    <div class="rounded bg-success p-3 me-3">
-                                        <i class="bi bi-info-circle text-white fs-4"></i>
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-0 fw-semibold text-dark">Jadwal Kegiatan</h6>
-                                        <small class="text-muted">Lihat jadwal</small>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="col-md-3">
-                            <a href="{{ route('ekstrakurikuler.index') }}" class="text-decoration-none">
-                                <div class="d-flex align-items-center p-3 bg-light rounded-3 hover-action">
-                                    <div class="rounded bg-info p-3 me-3">
-                                        <i class="bi bi-grid text-white fs-4"></i>
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-0 fw-semibold text-dark">Pengumuman</h6>
-                                        <small class="text-muted">Lihat semua pengumuman</small>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
+                    <h4 class="fw-bold mt-4">Pendaftaran Baru</h4>
+
+                    <table class="table table-bordered mt-3">
+                        <thead class="table-light">
+                            <tr>
+                                <th>No</th>
+                                <th>Nama Siswa</th>
+                                <th>Ekskul</th>
+                                <th>Tanggal Daftar</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @forelse ($pendaftaranList as $p)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $p->user->nama_lengkap }}</td>
+                                <td>{{ $p->ekstrakurikuler->nama_ekstrakurikuler }}</td>
+                                <td>{{ $p->tanggal_daftar }}</td>
+                                <td>
+                                    @if ($p->status == 'menunggu')
+                                        <span class="badge bg-warning">Menunggu</span>
+                                    @elseif ($p->status == 'disetujui')
+                                        <span class="badge bg-success">Disetujui</span>
+                                    @else
+                                        <span class="badge bg-danger">Ditolak</span>
+                                    @endif
+                                </td>
+                                
+                                <td>
+                                    @if ($p->status == 'menunggu')
+
+                                        <!-- APPROVE -->
+                                        <form action="{{ route('pendaftaran.approve', $p->id) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            <button type="submit" class="btn btn-success btn-sm">Approve</button>
+                                        </form>
+
+                                        <!-- REJECT -->
+                                        <form action="{{ route('pendaftaran.reject', $p->id) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+                                        </form>
+
+                                    @else
+                                        <small>-</small>
+                                    @endif
+                                </td>
+                            </tr>
+                            @empty
+                            <tr>
+                                <td colspan="6" class="text-center text-muted">
+                                    Belum ada pendaftaran.
+                                </td>
+                            </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+
                 </div>
             </div>
         </div>

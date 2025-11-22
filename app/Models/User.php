@@ -30,12 +30,6 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    /*
-    |--------------------------------------------------------------------------
-    | ROLE CHECKERS (string-based, sesuai migration)
-    |--------------------------------------------------------------------------
-    */
-
     public function isAdmin(): bool
     {
         return $this->role === 'admin';

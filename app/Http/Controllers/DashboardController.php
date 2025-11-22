@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Ekstrakurikuler;
 use App\Models\Perlombaan;
+use App\Models\Pendaftaran;
+use App\Models\Pengumuman;
 use App\Models\AnggotaEkstrakurikuler;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,28 +19,36 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        if (!auth()->check()) {
-            $ekstrakurikulers = Ekstrakurikuler::with('pembina')->get();
-            $pembinas = Ekstrakurikuler::whereHas('pembina', function($q){
-                $q->where('role', 'pembina');
-            })->with('pembina')->get();
-    
-            return view('siswa.index', compact('ekstrakurikulers', 'pembinas'));        }
-
-        return redirect()->route(auth()->user()->getDashboardRoute());
-    }
-    /**
-     * DASHBOARD SISWA
-     */
-    public function siswa()
-    {
+        // Data lama (TIDAK DIUBAH)
         $ekstrakurikulers = Ekstrakurikuler::with('pembina')->get();
         $pembinas = Ekstrakurikuler::whereHas('pembina', function($q){
             $q->where('role', 'pembina');
         })->with('pembina')->get();
 
-        return view('siswa.index', compact('ekstrakurikulers', 'pembinas'));
-    } 
+        // Tambahan baru untuk menghindari error Undefined variable $pengumuman
+        $pengumuman = \App\Models\Pengumuman::orderBy('tanggal', 'desc')->paginate(6);
+
+        // Gabungkan semua data
+        return view('siswa.index', compact('ekstrakurikulers', 'pembinas', 'pengumuman'));
+    }
+    
+    /**
+     * DASHBOARD SISWA
+     */
+    public function siswa()
+    {
+        // Data lama (TETAP dipertahankan)
+        $ekstrakurikulers = Ekstrakurikuler::with('pembina')->get();
+        $pembinas = Ekstrakurikuler::whereHas('pembina', function($q){
+            $q->where('role', 'pembina');
+        })->with('pembina')->get();
+
+        // Tambahan baru untuk pengumuman
+        $pengumuman = \App\Models\Pengumuman::orderBy('tanggal', 'desc')->paginate(6);
+
+        // Gabungkan semua tanpa mengubah struktur variabel sebelumnya
+        return view('siswa.index', compact('ekstrakurikulers', 'pembinas', 'pengumuman'));
+    }
 
     /**
      * DASHBOARD ADMIN
@@ -56,9 +66,6 @@ class DashboardController extends Controller
         ]);
     }
 
-    /**
-     * DASHBOARD PEMBINA — gabungan dari DashboardPembinaController@index
-     */
     public function pembina()
     {
         $pembina = auth()->user();
@@ -73,7 +80,11 @@ class DashboardController extends Controller
 
         $totalEkskul = $ekstrakurikulerList->count();
         $ekskulIds = $ekstrakurikulerList->pluck('id');
-
+        $pendaftaranList = Pendaftaran::with(['user', 'ekstrakurikuler'])
+            ->where('ekstrakurikuler_id', $ekskulIds)
+            ->where('status', 'menunggu')
+            ->orderBy('created_at', 'desc')
+            ->get();
         $totalPerlombaan = Perlombaan::whereIn('ekstrakurikuler_id', $ekskulIds)->count();
         $perlombaanTahunIni = Perlombaan::whereIn('ekstrakurikuler_id', $ekskulIds)
             ->whereYear('tanggal', Carbon::now()->year)
@@ -99,6 +110,7 @@ class DashboardController extends Controller
         return view('pembina.index', compact(
             'totalEkskul',
             'totalPerlombaan',
+            'pendaftaranList',
             'perlombaanTahunIni',
             'totalAnggota',
             'ekstrakurikulerList',
@@ -121,13 +133,17 @@ class DashboardController extends Controller
         $ekstrakurikuler = Ekstrakurikuler::with(['pembina'])
             ->where('user_ketua_id', $ketuaId)
             ->first();
-            if ($ekstrakurikuler) {
+
+        if ($ekstrakurikuler) {
             $ekskulId = $ekstrakurikuler->id;
-            $ekskulId = $ekstrakurikuler->id;
+
+            // AMBIL ANGGOTA
             $anggotaIds = AnggotaEkstrakurikuler::where('ekstrakurikuler_id', $ekskulId)
                 ->pluck('user_id');
             $anggotaList = User::whereIn('id', $anggotaIds)->get();
             $totalAnggota = $anggotaList->count();
+
+            // PERLOMBAAN
             $totalPerlombaan = Perlombaan::where('ekstrakurikuler_id', $ekskulId)->count();
             $perlombaanTahunIni = Perlombaan::where('ekstrakurikuler_id', $ekskulId)
                 ->whereYear('tanggal', Carbon::now()->year)
@@ -138,6 +154,7 @@ class DashboardController extends Controller
                 ->limit(5)
                 ->get();
 
+            // TINGKAT
             $tingkatSekolah = Perlombaan::where('ekstrakurikuler_id', $ekskulId)
                 ->where('tingkat', 'Sekolah')
                 ->count();
@@ -161,6 +178,12 @@ class DashboardController extends Controller
             $tingkatInternasional = Perlombaan::where('ekstrakurikuler_id', $ekskulId)
                 ->where('tingkat', 'Internasional')
                 ->count();
+            $pendaftaranList = Pendaftaran::with(['user', 'ekstrakurikuler'])
+                ->where('ekstrakurikuler_id', $ekskulId)
+                ->where('status', 'menunggu')
+                ->orderBy('created_at', 'desc')
+                ->get();
+
         } else {
             $totalAnggota = 0;
             $totalPerlombaan = 0;
@@ -172,6 +195,9 @@ class DashboardController extends Controller
             $tingkatProvinsi = 0;
             $tingkatNasional = 0;
             $tingkatInternasional = 0;
+
+            // Tambahan jika tidak punya ekskul
+            $pendaftaranList = collect();
         }
 
         return view('ketua.index', compact(
@@ -185,7 +211,37 @@ class DashboardController extends Controller
             'tingkatKabupaten',
             'tingkatProvinsi',
             'tingkatNasional',
-            'tingkatInternasional'
+            'tingkatInternasional',
+            'pendaftaranList'
         ));
     }
+
+   public function disetujui($id)
+    {
+        $pendaftaran = Pendaftaran::findOrFail($id);
+
+        $nama = $pendaftaran->user->nama_lengkap;
+
+        AnggotaEkstrakurikuler::create([
+            'user_id' => $pendaftaran->user_id,
+            'ekstrakurikuler_id' => $pendaftaran->ekstrakurikuler_id,
+            'nama_anggota' => $nama, 
+            'tahun_ajaran' => date('Y') . '/' . (date('Y') + 1),
+        ]);
+
+        $pendaftaran->delete();
+
+        return redirect()->route('pembina.anggota_index')->with('success', 'Pendaftaran berhasil disetujui!');    
+    }
+
+    public function reject($id)
+    {
+        $pendaftaran = Pendaftaran::findOrFail($id);
+
+        // Hapus data pendaftaran
+        $pendaftaran->delete();
+
+        return back()->with('success', 'Pendaftaran telah ditolak.');
+    }
+
 }

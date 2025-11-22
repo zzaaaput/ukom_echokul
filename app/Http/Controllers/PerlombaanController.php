@@ -9,53 +9,61 @@ use Illuminate\Support\Facades\Storage;
 
 class PerlombaanController extends Controller
 {
-    public function index(Request $request)
-    {
-        $search = $request->search;
+public function index(Request $request)
+{
+    $search = $request->search;
 
-        // Query dasar
-        $query = Perlombaan::with('ekstrakurikuler')
-            ->orderBy('tanggal', 'desc');
+    // Query dasar
+    $query = Perlombaan::with('ekstrakurikuler')
+        ->orderBy('tanggal', 'desc');
 
-        // Filter pencarian
-        if ($request->filled('search')) {
-            $query->where(function($q) use ($search) {
-                $q->where('nama_perlombaan', 'like', "%{$search}%")
-                  ->orWhere('tempat', 'like', "%{$search}%")
-                  ->orWhere('deskripsi', 'like', "%{$search}%")
-                  ->orWhere('tingkat', 'like', "%{$search}%")
-                  ->orWhere('tahun_ajaran', 'like', "%{$search}%");
-            });
-        }
-
-        // Filter ekstrakurikuler dari dropdown (optional)
-        if ($request->filled('ekskul')) {
-            $query->where('ekstrakurikuler_id', $request->ekskul);
-        }
-
-        // Filter tingkat dari dropdown (optional)
-        if ($request->filled('tingkat')) {
-            $query->where('tingkat', $request->tingkat);
-        }
-
-        // Pagination
-        $perlombaan = $query->paginate(10)->withQueryString();
-
-        // Data statistik
-        $totalPerlombaan = Perlombaan::count();
-        $totalEkskul = Ekstrakurikuler::count();
-
-        // Data ekskul untuk modal/filter
-        $ekskul = Ekstrakurikuler::orderBy('nama_ekstrakurikuler')->get();
-    
-        return view('pembina.perlombaan.index', compact(
-            'perlombaan',
-            'totalPerlombaan',
-            // 'tahunIni',
-            'totalEkskul',
-            'ekskul'
-        ));
+    // Filter pencarian
+    if ($request->filled('search')) {
+        $query->where(function($q) use ($search) {
+            $q->where('nama_perlombaan', 'like', "%{$search}%")
+              ->orWhere('tempat', 'like', "%{$search}%")
+              ->orWhere('deskripsi', 'like', "%{$search}%")
+              ->orWhere('tingkat', 'like', "%{$search}%")
+              ->orWhere('tahun_ajaran', 'like', "%{$search}%");
+        });
     }
+
+    // Filter ekstrakurikuler dari dropdown (optional)
+    if ($request->filled('ekskul')) {
+        $query->where('ekstrakurikuler_id', $request->ekskul);
+    }
+
+    // Filter tingkat dari dropdown (optional)
+    if ($request->filled('tingkat')) {
+        $query->where('tingkat', $request->tingkat);
+    }
+
+    // ==========================================================
+    // ✅ Tambahan Baru: Filter Tahun Perlombaan
+    // ==========================================================
+    if ($request->filled('tahun')) {
+        $query->whereYear('tanggal', $request->tahun);
+    }
+
+    // Pagination
+    $perlombaan = $query->paginate(10)->withQueryString();
+
+    // ==========================================================
+    // ✅ Tambahan Baru: Statistik Perlombaan Per Tahun
+    // ==========================================================
+    $tahunIni = Perlombaan::whereYear('tanggal', date('Y'))->count();
+    $totalPerlombaan = Perlombaan::count();
+    $totalEkskul = Ekstrakurikuler::count();
+    $ekskul = Ekstrakurikuler::orderBy('nama_ekstrakurikuler')->get();
+
+    return view('pembina.perlombaan.index', compact(
+        'perlombaan',
+        'totalPerlombaan',
+        'totalEkskul',
+        'ekskul',
+        'tahunIni'       
+    ));
+}
         
     // Tambah perlombaan
     public function store(Request $request)

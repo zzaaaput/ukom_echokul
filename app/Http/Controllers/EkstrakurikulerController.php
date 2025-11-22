@@ -10,42 +10,63 @@ use Illuminate\Support\Facades\Auth;
 
 class EkstrakurikulerController extends Controller
 {
-public function index(Request $request)
-{
-    $query = Ekstrakurikuler::with(['pembina', 'ketua']);
+    public function index(Request $request)
+    {
+        $query = Ekstrakurikuler::with(['pembina', 'ketua']);
+        $sort = $request->sort ?? null;
+        $direction = $request->direction ?? 'asc';
 
-    // Search otomatis
-    if ($request->filled('search')) {
-        $search = $request->search;
-        $query->where('nama_ekstrakurikuler', 'like', "%$search%")
-              ->orWhereHas('pembina', fn($q) => $q->where('nama_lengkap', 'like', "%$search%"))
-              ->orWhereHas('ketua', fn($q) => $q->where('nama_lengkap', 'like', "%$search%"));
-    }
-
-    // Sorting per kolom
-    $sort = $request->get('sort', 'nama_ekstrakurikuler');
-    $direction = $request->get('direction', 'asc');
-    $allowedSorts = ['nama_ekstrakurikuler', 'pembina', 'ketua', 'deskripsi'];
-    
-    if (in_array($sort, $allowedSorts)) {
-        if ($sort === 'pembina') {
-            $query->join('users as u1', 'ekstrakurikuler.user_pembina_id', '=', 'u1.id')
-                  ->orderBy('u1.nama_lengkap', $direction)
-                  ->select('ekstrakurikuler.*');
-        } elseif ($sort === 'ketua') {
-            $query->join('users as u2', 'ekstrakurikuler.user_ketua_id', '=', 'u2.id')
-                  ->orderBy('u2.nama_lengkap', $direction)
-                  ->select('ekstrakurikuler.*');
-        } else {
-            $query->orderBy($sort, $direction);
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where('nama_ekstrakurikuler', 'like', "%$search%")
+                ->orWhereHas('pembina', fn($q) => $q->where('nama_lengkap', 'like', "%$search%"))
+                ->orWhereHas('ketua', fn($q) => $q->where('nama_lengkap', 'like', "%$search%"));
         }
-    }
 
-    $ekstrakurikuler = $query->paginate(10)->appends($request->query());
-    $pembina = User::where('role', 'pembina')->orderBy('nama_lengkap')->get();
-    $ketua   = User::where('role', 'ketua')->orderBy('nama_lengkap')->get();
-    $totalPembina = Ekstrakurikuler::whereNotNull('user_pembina_id')->distinct('user_pembina_id')->count('user_pembina_id');
-    $totalKetua = Ekstrakurikuler::whereNotNull('user_ketua_id')->distinct('user_ketua_id')->count('user_ketua_id');
+        if ($request->sort === 'nama_asc') {
+            $query->orderBy('nama_ekstrakurikuler', 'asc');
+        } 
+        elseif ($request->sort === 'nama_desc') {
+            $query->orderBy('nama_ekstrakurikuler', 'desc');
+        }
+        elseif ($request->sort === 'terbaru') {
+            $query->orderBy('created_at', 'desc');
+        }
+        elseif ($request->sort === 'terlama') {
+            $query->orderBy('created_at', 'asc');
+        }
+        else {
+
+            $sort = $request->get('sort', 'nama_ekstrakurikuler');
+            $direction = $request->get('direction', 'asc');
+            $allowedSorts = ['nama_ekstrakurikuler', 'pembina', 'ketua', 'deskripsi'];
+            
+            if (in_array($sort, $allowedSorts)) {
+                if ($sort === 'pembina') {
+                    $query->join('users as u1', 'ekstrakurikuler.user_pembina_id', '=', 'u1.id')
+                        ->orderBy('u1.nama_lengkap', $direction)
+                        ->select('ekstrakurikuler.*');
+                } elseif ($sort === 'ketua') {
+                    $query->join('users as u2', 'ekstrakurikuler.user_ketua_id', '=', 'u2.id')
+                        ->orderBy('u2.nama_lengkap', $direction)
+                        ->select('ekstrakurikuler.*');
+                } else {
+                    $query->orderBy($sort, $direction);
+                }
+            }
+        }
+
+        $ekstrakurikuler = $query->paginate(10)->appends($request->query());
+        $pembina = User::where('role', 'pembina')->orderBy('nama_lengkap')->get();
+        $ketua   = User::where('role', 'ketua')->orderBy('nama_lengkap')->get();
+        
+        $totalPembina = Ekstrakurikuler::whereNotNull('user_pembina_id')
+                            ->distinct('user_pembina_id')
+                            ->count('user_pembina_id');
+
+        $totalKetua = Ekstrakurikuler::whereNotNull('user_ketua_id')
+                            ->distinct('user_ketua_id')
+                            ->count('user_ketua_id');
 
         return view('admin.ekstrakurikuler', compact(
             'ekstrakurikuler', 
@@ -57,7 +78,7 @@ public function index(Request $request)
             'totalPembina',
             'totalKetua'
         ));
-}
+    }
 
     public function store(Request $request)
     {

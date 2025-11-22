@@ -61,7 +61,7 @@ href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap5.min.css">
                     <thead class="bg-dark text-white">
                         <tr>
                             <th class="py-3 ps-4">No</th>
-                            <th class="py-3 ps-4 text-center">Foto</th> <!-- kolom foto -->
+                            <th class="py-3 ps-4 text-center">Foto</th> 
                             <th class="py-3 ps-4">Nama Lengkap</th>
                             <th class="py-3 ps-4">Email</th>
                             <th class="py-3 ps-4">Role</th>
@@ -299,14 +299,24 @@ href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap5.min.css">
                         <input type="email" name="email" class="form-control" required>
                     </div>
 
-                    <div class="mb-3">
+                    <div class="mb-3 position-relative">
                         <label class="form-label fw-semibold">Password</label>
-                        <input type="password" name="password" class="form-control" required>
+                        <input type="password" name="password" class="form-control" id="password" required>
+
+                        <span class="position-absolute top-50 end-0 translate-middle-y me-3"
+                            style="cursor:pointer;" onclick="togglePassword('password', this)">
+                            <i class="fas fa-eye"></i>
+                        </span>
                     </div>
 
-                    <div class="mb-3">
+                    <div class="mb-3 position-relative">
                         <label class="form-label fw-semibold">Konfirmasi Password</label>
-                        <input type="password" name="password_confirmation" class="form-control" required>
+                        <input type="password" name="password_confirmation" class="form-control" id="password_confirmation" required>
+
+                        <span class="position-absolute top-50 end-0 translate-middle-y me-3"
+                            style="cursor:pointer;" onclick="togglePassword('password_confirmation', this)">
+                            <i class="fas fa-eye"></i>
+                        </span>
                     </div>
 
                     <div class="mb-3">
@@ -343,5 +353,22 @@ href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap5.min.css">
         </div>
     </div>
 </div>
+
+<script>
+    function togglePassword(fieldId, iconElement) {
+        const input = document.getElementById(fieldId);
+        const icon = iconElement.querySelector('i');
+
+        if (input.type === "password") {
+            input.type = "text";
+            icon.classList.remove("fa-eye");
+            icon.classList.add("fa-eye-slash");
+        } else {
+            input.type = "password";
+            icon.classList.remove("fa-eye-slash");
+            icon.classList.add("fa-eye");
+        }
+    }
+</script>
 
 @endsection

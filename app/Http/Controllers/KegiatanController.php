@@ -16,16 +16,18 @@ class KegiatanController extends Controller
         $search  = $request->search;
         $user    = Auth::user();
 
-        // ================================
-        // ROLE HANDLING SAMA DENGAN PENILAIAN
-        // ================================
-        $pembinaEkskul = null;
+        // --- Perhitungan ---
+        $totalKegiatan = Kegiatan::count();
+        $kegiatanHariIni = Kegiatan::whereDate('tanggal', today())->count();
+        $totalEkstrakurikuler = Ekstrakurikuler::count();
 
+        // --- Pembina handling ---
+        $pembinaEkskul = null;
         if ($user?->role === 'pembina') {
             $pembinaEkskul = Ekstrakurikuler::where('user_pembina_id', $user->id)->first();
         }
 
-        // Query dasar
+        // --- Query dasar ---
         $query = Kegiatan::with('ekstrakurikuler');
 
         // Jika pembina → hanya ekskul yang dibina
@@ -33,44 +35,60 @@ class KegiatanController extends Controller
             $query->where('ekstrakurikuler_id', $pembinaEkskul->id);
         }
 
-        // Siswa → sesuai ekskul_id anggota
+        // Jika siswa → sesuai ekskul mereka
         if ($user?->role === 'siswa' && $user->ekstrakurikuler_id) {
             $query->where('ekstrakurikuler_id', $user->ekstrakurikuler_id);
         }
 
-        // Admin / bukan pembina → boleh filter manual
-        if ($request->filled('ekstrakurikuler_id')) {
-            $query->where('ekstrakurikuler_id', $request->ekstrakurikuler_id);
+        // ================================================================
+        // FILTER SESUAI FORM KAMU
+        // ================================================================
+
+        // Filter ekskul (form memakai name="ekskul")
+        if ($request->filled('ekskul')) {
+            $query->where('ekstrakurikuler_id', $request->ekskul);
         }
 
-        //----------------------------------------------------
-        // Search
-        //----------------------------------------------------
+        // Filter tanggal
+        if ($request->filled('tanggal')) {
+            $query->whereDate('tanggal', $request->tanggal);
+        }
+
+        // ================================================================
+        // SEARCH
+        // ================================================================
         if ($search) {
             $query->where('nama_kegiatan', 'like', "%$search%");
         }
 
-        //----------------------------------------------------
-        // Pagination
-        //----------------------------------------------------
+        // ================================================================
+        // PAGINATION
+        // ================================================================
         $kegiatan = $query->orderBy('tanggal', 'desc')
             ->paginate($perPage)
             ->appends([
                 'search' => $search,
                 'per_page' => $perPage,
-                'ekstrakurikuler_id' => $request->ekstrakurikuler_id,
+                'ekskul' => $request->ekskul,
+                'tanggal' => $request->tanggal,
             ]);
 
-        //----------------------------------------------------
+        // ================================================================
         // Daftar ekskul untuk dropdown filter
-        //----------------------------------------------------
+        // ================================================================
         if ($pembinaEkskul) {
-            $ekskul = collect([$pembinaEkskul]); // PEMBINA → collection
+            $ekskul = collect([$pembinaEkskul]);
         } else {
-            $ekskul = Ekstrakurikuler::all(); // ADMIN → semua
+            $ekskul = Ekstrakurikuler::all();
         }
 
-        return view('pembina.kegiatan.index', compact('kegiatan', 'ekskul', 'pembinaEkskul'));
+        return view('pembina.kegiatan.index', compact(
+            'kegiatan',
+            'ekskul',
+            'totalEkstrakurikuler',
+            'totalKegiatan',
+            'kegiatanHariIni'
+        ));
     }
 
     public function create()

@@ -22,9 +22,8 @@ class Pendaftaran extends Model
         'tanggal_disetujui',
     ];
 
-    public function user()
-    {
-        return $this->belongsTo(User::class);
+    public function user() {
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function ekstrakurikuler()

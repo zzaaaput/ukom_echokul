@@ -202,108 +202,67 @@
         <div class="col-12">
             <div class="card border-0 shadow-sm">
                 <div class="card-body p-4">
-                    <h5 class="card-title fw-bold mb-4">
-                        <i class="bi bi-lightning-fill text-warning me-2"></i>Quick Actions
-                    </h5>
-                    <div class="row g-4">
-                        <div class="col-md-4">
-                            <a href="{{ route('pembina.perlombaan.index') }}" class="text-decoration-none">
-                                <div class="d-flex align-items-center p-4 bg-light rounded-3 shadow-sm hover-action" style="transition: transform 0.2s;">
-                                    <div class="rounded-circle bg-primary p-3 me-3">
-                                        <i class="bi bi-trophy text-white fs-4"></i>
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-1 fw-bold text-dark">Kelola Perlombaan</h6>
-                                        <small class="text-secondary">Tambah & edit data</small>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
+                    <h4 class="fw-bold mt-4">Pendaftaran Baru</h4>
 
-                        <div class="col-md-4">
-                            <a href="{{ route('pembina.anggota.index') }}" class="text-decoration-none">
-                                <div class="d-flex align-items-center p-4 bg-light rounded-3 shadow-sm hover-action" style="transition: transform 0.2s;">
-                                    <div class="rounded-circle bg-success p-3 me-3">
-                                        <i class="bi bi-people text-white fs-4"></i>
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-1 fw-bold text-dark">Data Anggota</h6>
-                                        <small class="text-secondary">Lihat & kelola anggota</small>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
+                    <table class="table table-bordered mt-3">
+                        <thead class="table-light">
+                            <tr>
+                                <th>No</th>
+                                <th>Nama Siswa</th>
+                                <th>Ekskul</th>
+                                <th>Tanggal Daftar</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
 
-                        <div class="col-md-4">
-                            <a href="{{ route('pembina.penilaian.index') }}" class="text-decoration-none">
-                                <div class="d-flex align-items-center p-4 bg-light rounded-3 shadow-sm hover-action" style="transition: transform 0.2s;">
-                                    <div class="rounded-circle bg-warning p-3 me-3">
-                                        <i class="bi bi-info-circle text-white fs-4"></i>
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-1 fw-bold text-dark">Tambah Penilaian</h6>
-                                        <small class="text-secondary">Kelola Nilai Anggota</small>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
+                        <tbody>
+                            @forelse ($pendaftaranList as $p)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $p->user->nama_lengkap }}</td>
+                                <td>{{ $p->ekstrakurikuler->nama_ekstrakurikuler }}</td>
+                                <td>{{ $p->tanggal_daftar }}</td>
+                                <td>
+                                    @if ($p->status == 'menunggu')
+                                        <span class="badge bg-warning">Menunggu</span>
+                                    @elseif ($p->status == 'disetujui')
+                                        <span class="badge bg-success">Disetujui</span>
+                                    @else
+                                        <span class="badge bg-danger">Ditolak</span>
+                                    @endif
+                                </td>
+                                
+                                <td>
+                                    @if ($p->status == 'menunggu')
 
-                        <div class="col-md-4">
-                            <a href="{{ route('pembina.anggota.index') }}" class="text-decoration-none">
-                                <div class="d-flex align-items-center p-4 bg-light rounded-3 shadow-sm hover-action" style="transition: transform 0.2s;">
-                                    <div class="rounded-circle bg-danger p-3 me-3">
-                                        <i class="bi bi-card-checklist text-white fs-4"></i>
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-1 fw-bold text-dark">Data Pendaftaran</h6>
-                                        <small class="text-secondary">Kelola pendaftaran</small>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
+                                        <!-- APPROVE -->
+                                        <form action="{{ route('pendaftaran.approve', $p->id) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            <button type="submit" class="btn btn-success btn-sm">Approve</button>
+                                        </form>
 
-                        <div class="col-md-4">
-                            <a href="{{ route('pembina.anggota.index') }}" class="text-decoration-none">
-                                <div class="d-flex align-items-center p-4 bg-light rounded-3 shadow-sm hover-action" style="transition: transform 0.2s;">
-                                    <div class="rounded-circle bg-info p-3 me-3">
-                                        <i class="bi bi-check2-square text-white fs-4"></i>
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-1 fw-bold text-dark">Kehadiran Anggota</h6>
-                                        <small class="text-secondary">Lihat keaktifan anggota</small>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
+                                        <!-- REJECT -->
+                                        <form action="{{ route('pendaftaran.reject', $p->id) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+                                        </form>
 
-                        <div class="col-md-4">
-                            <a href="{{ route('pembina.anggota.index') }}" class="text-decoration-none">
-                                <div class="d-flex align-items-center p-4 bg-light rounded-3 shadow-sm hover-action" style="transition: transform 0.2s;">
-                                    <div class="rounded-circle bg-purple p-3 me-3">
-                                        <i class="bi bi-calendar-event text-white fs-4"></i>
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-1 fw-bold text-dark">Kegiatan</h6>
-                                        <small class="text-secondary">Tambah kegiatan</small>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
+                                    @else
+                                        <small>-</small>
+                                    @endif
+                                </td>
+                            </tr>
+                            @empty
+                            <tr>
+                                <td colspan="6" class="text-center text-muted">
+                                    Belum ada pendaftaran.
+                                </td>
+                            </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
 
-                        <div class="col-md-4">
-                            <a href="{{ route('admin.pengumuman.index') }}" class="text-decoration-none">
-                                <div class="d-flex align-items-center p-4 bg-light rounded-3 shadow-sm hover-action" style="transition: transform 0.2s;">
-                                    <div class="rounded-circle bg-secondary p-3 me-3">
-                                        <i class="bi bi-megaphone text-white fs-4"></i>
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-1 fw-bold text-dark">Pengumuman</h6>
-                                        <small class="text-secondary">Lihat dan kelola pengumuman</small>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>

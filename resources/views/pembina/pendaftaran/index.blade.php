@@ -25,7 +25,7 @@
                     <td>{{ ucfirst($p->status) }}</td>
                     <td>
                         @if($p->status === 'menunggu')
-                            <form action="{{ route('pembina.pendaftaran.approve', $p->id) }}" method="POST" style="display:inline">
+                            <form action="{{ route('ketua.pendaftaran.approve', $p->id) }}" method="POST" style="display:inline">
                                 @csrf
                                 <button class="btn btn-sm btn-success" type="submit">Setujui</button>
                             </form>
