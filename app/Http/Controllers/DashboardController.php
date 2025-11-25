@@ -81,7 +81,7 @@ class DashboardController extends Controller
         $totalEkskul = $ekstrakurikulerList->count();
         $ekskulIds = $ekstrakurikulerList->pluck('id');
         $pendaftaranList = Pendaftaran::with(['user', 'ekstrakurikuler'])
-            ->where('ekstrakurikuler_id', $ekskulIds)
+            ->whereIn('ekstrakurikuler_id', $ekskulIds)
             ->where('status', 'menunggu')
             ->orderBy('created_at', 'desc')
             ->get();
@@ -215,8 +215,7 @@ class DashboardController extends Controller
             'pendaftaranList'
         ));
     }
-
-   public function disetujui($id)
+    public function disetujui($id)
     {
         $pendaftaran = Pendaftaran::findOrFail($id);
 

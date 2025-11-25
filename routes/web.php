@@ -41,7 +41,7 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('user/{id}/edit', [UserController::class, 'edit'])->name('admin.user.edit');
     Route::put('user/{id}', [UserController::class, 'update'])->name('admin.user.update');
     Route::delete('user/{id}', [UserController::class, 'destroy'])->name('admin.user.destroy');
-    Route::get('users/export/pdf', [UserController::class, 'exportPdf'])->name('admin.users.export.pdf');
+    // Route::get('users/export/pdf', [UserController::class, 'exportPdf'])->name('admin.users.export.pdf');
 
     Route::resource('kegiatan', KegiatanController::class)->names('admin.kegiatan');
 

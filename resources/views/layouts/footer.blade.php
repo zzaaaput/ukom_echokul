@@ -4,12 +4,14 @@
         footer {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
         }
+
         .footer-bg-pattern {
             position: absolute;
             inset: 0;
             opacity: 0.05;
             pointer-events: none;
         }
+
         .footer-blur-1 {
             position: absolute;
             top: 0;
@@ -20,6 +22,7 @@
             border-radius: 50%;
             filter: blur(80px);
         }
+
         .footer-blur-2 {
             position: absolute;
             bottom: 0;
@@ -30,6 +33,7 @@
             border-radius: 50%;
             filter: blur(80px);
         }
+
         .footer-icon-box {
             width: 40px;
             height: 40px;
@@ -38,6 +42,7 @@
             align-items: center;
             justify-content: center;
         }
+
         .footer-icon-box-sm {
             width: 32px;
             height: 32px;
@@ -46,18 +51,23 @@
             align-items: center;
             justify-content: center;
         }
+
         .footer-gradient-blue {
-            background: linear-gradient(135deg, #3b82f6 0%, #9333ea 100%);
+            background: linear-gradient(135deg, #3E0703 0%, #660B05 100%);
         }
+
         .footer-gradient-green {
             background: linear-gradient(135deg, #10b981 0%, #14b8a6 100%);
         }
+
         .footer-gradient-orange {
             background: linear-gradient(135deg, #f97316 0%, #dc2626 100%);
         }
-        .footer-gradient-pink {
-            background: linear-gradient(135deg, #ec4899 0%, #9333ea 100%);
+
+        .footer-gradient-navy {
+            background: linear-gradient(135deg, #0C2B4E 50%, #1D546C 100%);
         }
+
         .footer-social-link {
             width: 40px;
             height: 40px;
@@ -70,26 +80,32 @@
             text-decoration: none;
             color: #fff;
         }
+
         .footer-social-link:hover {
             transform: scale(1.1);
             color: #fff;
         }
+
         .footer-social-link.facebook:hover {
             background: #3b82f6;
             box-shadow: 0 10px 25px rgba(59, 130, 246, 0.5);
         }
+
         .footer-social-link.instagram:hover {
             background: #ec4899;
             box-shadow: 0 10px 25px rgba(236, 72, 153, 0.5);
         }
+
         .footer-social-link.twitter:hover {
             background: #60a5fa;
             box-shadow: 0 10px 25px rgba(96, 165, 250, 0.5);
         }
+
         .footer-social-link.youtube:hover {
             background: #dc2626;
             box-shadow: 0 10px 25px rgba(220, 38, 38, 0.5);
         }
+
         .footer-contact-box {
             width: 40px;
             height: 40px;
@@ -101,15 +117,19 @@
             flex-shrink: 0;
             transition: all 0.3s ease;
         }
+
         .footer-contact-item:hover .footer-contact-box {
             background: #10b981;
         }
+
         .footer-contact-item:hover .footer-contact-box.email {
             background: #3b82f6;
         }
+
         .footer-contact-item:hover .footer-contact-box.phone {
             background: #9333ea;
         }
+
         .footer-link {
             color: #9ca3af;
             text-decoration: none;
@@ -118,10 +138,12 @@
             align-items: center;
             gap: 12px;
         }
+
         .footer-link:hover {
             color: #fff;
             transform: translateX(8px);
         }
+
         .footer-link-dot {
             width: 8px;
             height: 8px;
@@ -129,10 +151,12 @@
             border-radius: 50%;
             transition: all 0.3s ease;
         }
+
         .footer-link:hover .footer-link-dot {
             width: 12px;
             height: 12px;
         }
+
         .footer-newsletter-input {
             background: #374151;
             border: 1px solid #4b5563;
@@ -140,13 +164,15 @@
             border-radius: 8px;
             transition: all 0.3s ease;
         }
+
         .footer-newsletter-input:focus {
             outline: none;
             border-color: #9333ea;
             box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.2);
         }
+
         .footer-newsletter-btn {
-            background: linear-gradient(to right, #9333ea 0%, #ec4899 100%);
+            background: linear-gradient(to right, #1a237e 0%, #283593 100%);
             border: none;
             color: #fff;
             font-weight: 600;
@@ -155,24 +181,31 @@
             transition: all 0.3s ease;
             cursor: pointer;
         }
+
         .footer-newsletter-btn:hover {
-            background: linear-gradient(to right, #7c3aed 0%, #db2777 100%);
+            background: linear-gradient(to right, #0d47a1 0%, #1565c0 100%);
             transform: scale(1.05);
-            box-shadow: 0 10px 25px rgba(147, 51, 234, 0.5);
+            box-shadow: 0 10px 25px rgba(26, 35, 126, 0.5);
         }
+
+        .footer-newsletter-input::placeholder {
+            color: #fff;
+        }
+
         .footer-stat-box {
             background: rgba(55, 65, 81, 0.5);
             border-radius: 8px;
             padding: 12px;
             text-align: center;
         }
+
         .footer-back-to-top {
             position: fixed;
             bottom: 32px;
             right: 32px;
             width: 48px;
             height: 48px;
-            background: linear-gradient(135deg, #9333ea 0%, #ec4899 100%);
+            background: #001f3f;
             color: #fff;
             border: none;
             border-radius: 50%;
@@ -184,10 +217,13 @@
             align-items: center;
             justify-content: center;
         }
+
         .footer-back-to-top:hover {
             transform: scale(1.1);
-            box-shadow: 0 10px 25px rgba(147, 51, 234, 0.5);
+            background: #283593;
+            box-shadow: 0 10px 25px rgba(26, 35, 126, 0.5);
         }
+
         .footer-logo-box {
             width: 40px;
             height: 40px;
@@ -210,38 +246,46 @@
     <!-- Main Footer Content -->
     <div class="container px-4 px-md-5 py-5 position-relative" style="z-index: 10;">
         <div class="row g-4 mb-4">
-            
+
             <!-- About Section -->
             <div class="col-lg-3 col-md-6">
                 <div class="mb-4">
                     <h3 class="h5 fw-bold text-white mb-3 d-flex align-items-center gap-2">
-                        <span class="footer-icon-box footer-gradient-blue">
+                        <span class="footer-icon-box footer-gradient-navy">
                             <svg class="text-white" width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                             </svg>
                         </span>
                         <span>Tentang Kami</span>
                     </h3>
-                    <p class="text-muted small lh-base">
+                    <p class="text-white small lh-base">
                         Website komunikasi antar ekstrakurikuler di sekolah sebagai wadah informasi, diskusi, dan kolaborasi siswa.
                     </p>
                 </div>
-                
+
                 <!-- Social Media -->
                 <div>
                     <h6 class="text-white fw-semibold mb-3 small">Ikuti Kami</h6>
                     <div class="d-flex gap-2">
                         <a href="#" class="footer-social-link facebook">
-                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                            </svg>
                         </a>
                         <a href="#" class="footer-social-link instagram">
-                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                            </svg>
                         </a>
                         <a href="#" class="footer-social-link twitter">
-                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg>
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z" />
+                            </svg>
                         </a>
                         <a href="#" class="footer-social-link youtube">
-                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                            </svg>
                         </a>
                     </div>
                 </div>
@@ -266,11 +310,11 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                             </svg>
                         </div>
-                        <p class="text-muted small mb-0 lh-base">
-                            Jl. Pendidikan No. 12,<br>Kota Pelajar, Indonesia
+                        <p class="text-white small mb-0 lh-base">
+                        Jl. Bintara VIII No.2, RT.005/RW.003, Bintara, Kec. Bekasi Bar., Kota Bks, Jawa Barat 17134
                         </p>
                     </div>
-                    
+
                     <div class="footer-contact-item d-flex align-items-start gap-3">
                         <div class="footer-contact-box email">
                             <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -279,10 +323,10 @@
                         </div>
                         <div>
                             <p class="text-white fw-semibold mb-1 small">Email</p>
-                            <a href="mailto:info@echokul.sch.id" class="text-muted text-decoration-none small">info@echokul.sch.id</a>
+                            <a href="mailto:info@echokul.sch.id" class="text-white text-decoration-none small">info@echokul.sch.id</a>
                         </div>
                     </div>
-                    
+
                     <div class="footer-contact-item d-flex align-items-start gap-3">
                         <div class="footer-contact-box phone">
                             <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -291,7 +335,7 @@
                         </div>
                         <div>
                             <p class="text-white fw-semibold mb-1 small">Telepon</p>
-                            <a href="tel:+62123456789" class="text-muted text-decoration-none small">+62 123 456 789</a>
+                            <a href="tel:+62123456789" class="text-white text-decoration-none small">+62 897 356 842</a>
                         </div>
                     </div>
                 </div>
@@ -347,44 +391,27 @@
                 </ul>
             </div>
 
-            <!-- Newsletter -->
+            <!-- Berita ter update -->
             <div class="col-lg-3 col-md-6">
                 <h3 class="h6 fw-bold text-white mb-4 d-flex align-items-center gap-2">
-                    <span class="footer-icon-box-sm footer-gradient-pink">
+                    <span class="footer-icon-box-sm footer-gradient-navy">
                         <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
                         </svg>
                     </span>
-                    <span>Newsletter</span>
+                    <span>Berita</span>
                 </h3>
-                <p class="text-muted small mb-3">
+                <p class="text-white small mb-3">
                     Dapatkan update terbaru tentang kegiatan dan informasi ekstrakurikuler
                 </p>
                 <div class="mb-3">
-                    <input 
-                        type="email" 
-                        placeholder="Email Anda" 
-                        class="form-control footer-newsletter-input mb-2"
-                    >
+                    <input
+                        type="email"
+                        placeholder="Email Anda"
+                        class="form-control footer-newsletter-input mb-2">
                     <button class="btn w-100 footer-newsletter-btn">
                         Berlangganan
                     </button>
-                </div>
-                
-                <!-- Stats -->
-                <div class="row g-2 pt-3" style="border-top: 1px solid #4b5563;">
-                    <div class="col-6">
-                        <div class="footer-stat-box">
-                            <p class="h4 text-white fw-bold mb-0">25+</p>
-                            <p class="text-muted mb-0" style="font-size: 0.75rem;">Ekstrakurikuler</p>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="footer-stat-box">
-                            <p class="h4 text-white fw-bold mb-0">500+</p>
-                            <p class="text-muted mb-0" style="font-size: 0.75rem;">Anggota Aktif</p>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -395,28 +422,22 @@
         <!-- Bottom Footer -->
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
             <div class="d-flex align-items-center gap-2">
-                <div class="footer-logo-box">
+                <div class="footer-logo-box ">
                     <span>E</span>
                 </div>
                 <div>
                     <p class="text-white fw-bold mb-0">Echokul</p>
                 </div>
             </div>
-            
+
             <div class="text-center text-md-start">
-                <p class="text-muted mb-1">
-                    © 2025 <span class="text-white fw-semibold">Echokul</span> | 
+                <p class="text-white mb-1">
+                    2025 <span class="text-white fw-semibold">Echokul</span> |
                     <span style="color: #a855f7;">XII RPL-A</span>
                 </p>
-                <p class="text-muted mb-0 small">
-                    Made with <span style="color: #dc2626;">❤</span> by Anisa, Ratna, Zahra
+                <p class="text-white mb-0 small">
+                    By <span style="color: #dc2626;">❤</span> by Anisa, Ratna, Zahra
                 </p>
-            </div>
-            
-            <div class="d-flex gap-3 small">
-                <a href="#" class="text-muted text-decoration-none">Privacy Policy</a>
-                <span class="text-secondary">|</span>
-                <a href="#" class="text-muted text-decoration-none">Terms of Service</a>
             </div>
         </div>
     </div>

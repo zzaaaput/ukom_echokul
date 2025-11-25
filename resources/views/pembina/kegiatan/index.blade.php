@@ -18,13 +18,11 @@
                             </p>
                         </div>
 
-                        @if(Auth::check() && (Auth::user()->role === 'ketua' || Auth::user()->role === 'pembina'))
                         <button class="btn btn-primary btn-lg px-4"
                                 data-bs-toggle="modal"
                                 data-bs-target="#modalTambah">
                             <i class="bi bi-plus-circle me-2"></i>Tambah Kegiatan
                         </button>
-                        @endif
                     </div>
                 </div>
 
@@ -73,8 +71,8 @@
                                 @forelse($kegiatan as $index => $row)
                                 <tr>
                                     <td class="ps-4 fw-semibold">{{ $kegiatan->firstItem() + $index }}</td>
-                                    <td>{{ $row->ekstrakurikuler->nama_ekstrakurikuler ?? '-' }}</td>
-                                    <td class="fw-bold">{{ $row->nama_kegiatan }}</td>
+                                    <td class="fw-bold">{{ $row->ekstrakurikuler->nama_ekstrakurikuler ?? '-' }}</td>
+                                    <td>{{ $row->nama_kegiatan }}</td>
                                     <td>
                                         <span class="badge bg-info bg-opacity-10 text-info px-3 py-2">
                                             <i class="bi bi-calendar3 me-1"></i>
@@ -83,13 +81,11 @@
                                     </td>
                                     <td>{{ $row->lokasi ?? '-' }}</td>
                                     <td>
-                                        @if($row->foto && file_exists(storage_path('app/public/' . $row->foto)))
-                                            <img src="{{ asset('storage/' . $row->foto) }}" 
-                                                class="rounded-3 shadow-sm border border-2 border-primary" 
-                                                style="width:70px; height:70px; object-fit:cover;">
-                                        @else
-                                            <span class="text-muted">-</span>
-                                        @endif
+                                    @if($row->foto && file_exists(storage_path('app/public/' . $row->foto)))
+                                        <img src="{{ asset('storage/' . $row->foto) }}" style="width:70px; height:70px; object-fit:cover;">
+                                    @else
+                                        <span class="text-muted">-</span>
+                                    @endif
                                     </td>
                                     <td class="text-center">
                                         <div class="d-flex flex-wrap justify-content-center gap-2">
@@ -99,7 +95,6 @@
                                                 <i class="bi bi-eye me-1"></i> Detail
                                             </button>
 
-                                            @if(Auth::check() && (Auth::user()->role === 'ketua' || Auth::user()->role === 'pembina'))
                                                 <button class="btn btn-sm btn-warning"
                                                         data-bs-toggle="modal"
                                                         data-bs-target="#modalEdit{{ $row->id }}">
@@ -111,7 +106,6 @@
                                                         data-bs-target="#modalHapus{{ $row->id }}">
                                                     <i class="bi bi-trash me-1"></i> Hapus
                                                 </button>
-                                            @endif
                                         </div>
                                     </td>
                                 </tr>
@@ -235,13 +229,7 @@
                                                             <label class="form-label fw-semibold">
                                                                 <i class="bi bi-trophy text-warning me-1"></i> Ekstrakurikuler
                                                             </label>
-                                                            <select class="form-select" name="ekstrakurikuler_id" required>
-                                                                @foreach($ekskul as $e)
-                                                                    <option value="{{ $e->id }}" {{ $row->ekstrakurikuler_id == $e->id ? 'selected' : '' }}>
-                                                                        {{ $e->nama_ekstrakurikuler }}
-                                                                    </option>
-                                                                @endforeach
-                                                            </select>
+                                                            <p class="fw-bold mb-0">{{ $row->ekstrakurikuler->nama_ekstrakurikuler ?? '-' }}</p>
                                                         </div>
 
                                                         <div class="col-12">
@@ -388,22 +376,10 @@
                         <div class="modal-body p-4">
                             <div class="row g-3">
                                 <div class="col-12">
-                                    <label class="form-label fw-semibold">
-                                        <i class="bi bi-trophy text-primary me-1"></i> Ekstrakurikuler
+                                    <label class="form-label fw-semibol">
+                                        <i class="bi bi-calendar-event text-primary me-1"></i> Ekstrakurikuler
                                     </label>
-                                    @if(Auth::check() && Auth::user()->role === 'pembina')
-                                        <input type="text" class="form-control" 
-                                            value="{{ $pembinaEkskul->nama_ekstrakurikuler ?? '' }}" readonly>
-                                        <input type="hidden" name="ekstrakurikuler_id" 
-                                            value="{{ $pembinaEkskul->id ?? '' }}">
-                                    @else
-                                        <select name="ekstrakurikuler_id" class="form-select" required>
-                                            <option value="">-- Pilih Ekstrakurikuler --</option>
-                                            @foreach($ekstrakurikulerList as $e)
-                                                <option value="{{ $e->id }}">{{ $e->nama_ekstrakurikuler }}</option>
-                                            @endforeach
-                                        </select>
-                                    @endif
+                                    <p class="fw-bold mb-0">{{ $row->ekstrakurikuler->nama_ekstrakurikuler ?? '-' }}</p>
                                 </div>
 
                                 <div class="col-12">

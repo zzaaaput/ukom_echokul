@@ -12,10 +12,6 @@
         </div>
 
         <div>
-            <a href="{{ route('admin.users.export.pdf') }}" class="btn btn-danger fw-semibold me-2">
-                <i class="bi bi-file-earmark-pdf"></i> Export PDF
-            </a>
-
             <button class="btn btn-primary fw-semibold"
                 data-bs-toggle="modal"
                 data-bs-target="#modalTambahUser">
@@ -24,13 +20,13 @@
         </div>
     </div>
     {{-- DataTables CSS --}}
-<link rel="stylesheet" 
+<!-- <link rel="stylesheet" 
 href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
 <link rel="stylesheet" 
-href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap5.min.css">
+href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap5.min.css"> -->
 
 {{-- DataTables JS --}}
-<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<!-- <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 
@@ -42,16 +38,16 @@ href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap5.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
 
 <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script> -->
 
-<script>
+<!-- <script>
     $(document).ready(function () {
         $('#tabel-user').DataTable({
             dom: 'Bfrtip',
             buttons: ['copy', 'csv', 'excel', 'print']
         });
     });
-</script>
+</script> -->
 
     <!-- Table -->
     <div class="card border-0 shadow-sm rounded-3">

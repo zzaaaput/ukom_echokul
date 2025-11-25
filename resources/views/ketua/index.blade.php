@@ -221,10 +221,6 @@
                             <small class="text-muted d-block mb-1">Deskripsi:</small>
                             <p class="small mb-0">{{ $ekstrakurikuler->deskripsi ?? 'Tidak ada deskripsi' }}</p>
                         </div>
-
-                        <a href="{{ route('ekstrakurikuler.index') }}" class="btn btn-danger btn-sm w-100">
-                            <i class="bi bi-eye me-2"></i>Lihat Detail Lengkap
-                        </a>
                     </div>
                     @else
                     <div class="text-center py-4">
@@ -290,106 +286,6 @@
             </div>
         </div>
     </div>
-
-    <div class="row g-4 mt-2">
-        <div class="col-lg-8">
-            <div class="card border-0 shadow-sm">
-                <div class="card-header bg-white border-0 pt-4 pb-3">
-                    <h5 class="fw-bold mb-0">
-                        <i class="bi bi-bar-chart text-danger me-2"></i>Prestasi Berdasarkan Tingkat
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <div class="row g-3">
-                        @php
-                            $tingkatStats = [
-                                ['name' => 'Sekolah', 'count' => $tingkatSekolah ?? 0, 'icon' => 'building', 'color' => 'primary'],
-                                ['name' => 'Kecamatan', 'count' => $tingkatKecamatan ?? 0, 'icon' => 'map', 'color' => 'success'],
-                                ['name' => 'Kabupaten', 'count' => $tingkatKabupaten ?? 0, 'icon' => 'geo-alt', 'color' => 'info'],
-                                ['name' => 'Provinsi', 'count' => $tingkatProvinsi ?? 0, 'icon' => 'flag', 'color' => 'warning'],
-                                ['name' => 'Nasional', 'count' => $tingkatNasional ?? 0, 'icon' => 'star', 'color' => 'danger'],
-                                ['name' => 'Internasional', 'count' => $tingkatInternasional ?? 0, 'icon' => 'globe', 'color' => 'dark']
-                            ];
-                            $maxCount = max(array_column($tingkatStats, 'count'));
-                        @endphp
-
-                        @foreach($tingkatStats as $stat)
-                        <div class="col-md-4">
-                            <div class="p-3 border rounded-3 h-100 hover-stat">
-                                <div class="d-flex align-items-center justify-content-between mb-3">
-                                    <div class="rounded bg-{{ $stat['color'] }} bg-opacity-10 p-2">
-                                        <i class="bi bi-{{ $stat['icon'] }} fs-5 text-{{ $stat['color'] }}"></i>
-                                    </div>
-                                    <h3 class="fw-bold mb-0 text-{{ $stat['color'] }}">{{ $stat['count'] }}</h3>
-                                </div>
-                                <p class="mb-2 small fw-semibold">{{ $stat['name'] }}</p>
-                                <div class="progress" style="height: 6px;">
-                                    <div class="progress-bar bg-{{ $stat['color'] }}" 
-                                         style="width: {{ $totalPerlombaan > 0 ? ($stat['count'] / $totalPerlombaan * 100) : 0 }}%"></div>
-                                </div>
-                                <small class="text-muted">
-                                    {{ $totalPerlombaan > 0 ? number_format(($stat['count'] / $totalPerlombaan * 100), 1) : 0 }}% dari total
-                                </small>
-                            </div>
-                        </div>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-4">
-            <div class="card border-0 shadow-sm h-100">
-                <div class="card-header bg-white border-0 pt-4 pb-3">
-                    <h5 class="fw-bold mb-0">
-                        <i class="bi bi-clipboard-check text-danger me-2"></i>Tugas Ketua
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <div class="alert alert-danger border-0 mb-3">
-                        <div class="d-flex align-items-start">
-                            <i class="bi bi-star-fill fs-4 me-3"></i>
-                            <div>
-                                <h6 class="fw-bold mb-2">Koordinasi Anggota</h6>
-                                <p class="small mb-0">Pastikan semua anggota aktif mengikuti kegiatan rutin ekstrakurikuler.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="alert alert-warning border-0 mb-3">
-                        <div class="d-flex align-items-start">
-                            <i class="bi bi-trophy-fill fs-4 me-3"></i>
-                            <div>
-                                <h6 class="fw-bold mb-2">Persiapan Lomba</h6>
-                                <p class="small mb-0">Koordinasikan dengan pembina untuk persiapan perlombaan mendatang.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="alert alert-success border-0 mb-3">
-                        <div class="d-flex align-items-start">
-                            <i class="bi bi-clipboard-data fs-4 me-3"></i>
-                            <div>
-                                <h6 class="fw-bold mb-2">Update Dokumentasi</h6>
-                                <p class="small mb-0">Lengkapi data perlombaan dan dokumentasi kegiatan secara berkala.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="alert alert-info border-0 mb-0">
-                        <div class="d-flex align-items-start">
-                            <i class="bi bi-people-fill fs-4 me-3"></i>
-                            <div>
-                                <h6 class="fw-bold mb-2">Rapat Rutin</h6>
-                                <p class="small mb-0">Jadwalkan rapat evaluasi dengan pembina dan anggota.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
 </div>
 
 <style>

@@ -190,7 +190,7 @@
                                                 <a href="{{ asset('storage/' . $p->surat_keterangan_ortu) }}" 
                                                    target="_blank" 
                                                    class="btn btn-primary">
-                                                    <i class="bi bi-download me-2"></i>Unduh
+                                                    <i class="bi bi-download me-2"></i>Lihat
                                                 </a>
                                             </div>
                                         </div>

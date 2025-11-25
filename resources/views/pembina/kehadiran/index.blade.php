@@ -27,7 +27,7 @@
         <div class="card-body p-4">
 
             <!-- Filter Section -->
-            <form method="GET" action="{{ route('pembina.kehadiran.index') }}" id="filterForm">
+            <form method="GET" action="{{ route('kehadiran.index') }}" id="filterForm">
                 <div class="row mb-4 g-3 align-items-end">
                     <div class="col-md-2">
                         <label class="form-label fw-semibold text-dark mb-2">Tampilkan</label>
@@ -61,7 +61,7 @@
                             <button type="submit" class="btn btn-primary flex-fill" style="height: 45px; font-weight: 500;">
                                 <i class="bi bi-search me-2"></i>Cari Data
                             </button>
-                            <a href="{{ route('pembina.kehadiran.index') }}" class="btn btn-primary" style="height: 45px; font-weight: 500; padding: 0 20px; display: flex; align-items: center; justify-content: center;" title="Reset Filter">
+                            <a href="{{ route('kehadiran.index') }}" class="btn btn-primary" style="height: 45px; font-weight: 500; padding: 0 20px; display: flex; align-items: center; justify-content: center;" title="Reset Filter">
                                 <i class="bi bi-arrow-clockwise me-1"></i>Reset
                             </a>
                         </div>

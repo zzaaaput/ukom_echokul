@@ -14,40 +14,50 @@ class KehadiranController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-
+    
         // Pembina hanya bisa mengelola ekskul binaannya
         $ekskul_binaan = Ekstrakurikuler::where('user_pembina_id', $user->id)->first();
-
-        $search = $request->search;
-
+    
+        // Ambil parameter filter
+        $search   = $request->search;
+        $status   = $request->status;
+        $perPage  = $request->per_page ?? 10;
+    
         $kehadiran = Kehadiran::with(['anggota.user', 'kegiatan'])
+            // === FILTER PENCARIAN ===
             ->when($search, function ($q) use ($search) {
-
-                // FIX: Grouping agar query tidak error
                 $q->where(function ($sub) use ($search) {
                     $sub->whereHas('anggota.user', function ($u) use ($search) {
-                        $u->where('name', 'like', "%$search%");
+                        $u->where('nama_anggota', 'like', "%$search%");
                     })
                     ->orWhereHas('kegiatan', function ($ka) use ($search) {
                         $ka->where('nama_kegiatan', 'like', "%$search%");
                     });
                 });
-
             })
+    
+            // === FILTER STATUS ===
+            ->when($status, function ($q) use ($status) {
+                $q->where('status', $status);
+            })
+    
             ->orderBy('tanggal', 'desc')
-            ->paginate(10)  // INI TIDAK ERROR LAGI
-            ->withQueryString();
-
+    
+            // === PAGINATION ===
+            ->paginate($perPage)
+            ->withQueryString(); // Agar filter tidak hilang saat ganti halaman
+    
+        // Data tambahan
         $anggota = AnggotaEkstrakurikuler::with('user')->get();
         $kegiatan = Kegiatan::orderBy('tanggal', 'desc')->get();
-
+    
         return view('pembina.kehadiran.index', compact(
             'kehadiran',
             'anggota',
             'kegiatan',
             'ekskul_binaan'
         ));
-    }
+    }    
 
     public function store(Request $request)
     {

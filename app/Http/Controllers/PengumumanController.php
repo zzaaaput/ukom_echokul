@@ -83,9 +83,11 @@ class PengumumanController extends Controller
 
         if ($request->hasFile('foto')) {
             $file = $request->file('foto');
-            $path = $file->storeAs('public/images/pengumuman', time().'_'.$file->getClientOriginalName());
-            $data['foto'] = str_replace('public/', 'storage/', $path);
-        }
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $file->storeAs('public/images/pengumuman', $fileName);
+        
+            $data['foto'] = 'images/pengumuman/' . $fileName; // simpan path bersih
+        }        
 
         $data['user_id'] = Auth::id();
         Pengumuman::create($data);

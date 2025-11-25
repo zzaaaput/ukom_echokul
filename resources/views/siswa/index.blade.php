@@ -31,68 +31,30 @@
         </button>
     </div>
 
-    <section class="py-5">
-        <div class="container">
-        <div class="row text-center g-4">
-
-        <div class="col-md-4">
-            <div class="card text-white border-0 shadow-lg rounded-4 py-5" style="background-color: #001f3f;">
-            <div class="card-body">
-                <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-                <i class="bi bi-bullseye display-3 mb-3"></i>
-                <h5 class="fw-bold">VISI MISI</h5>
-                <a href="#" class="btn btn-light mt-3">Selengkapnya</a>
-            </div>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card text-white border-0 shadow-lg rounded-4 py-5" style="background-color: #001f3f;">
-            <div class="card-body">
-                <i class="bi bi-person-fill display-3 mb-3"></i>
-                <h5 class="fw-bold">KEPALA SEKOLAH</h5>
-                <a href="#" class="btn btn-light mt-3">Selengkapnya</a>
-            </div>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card text-white border-0 shadow-lg rounded-4 py-5" style="background-color: #001f3f;">
-            <div class="card-body">
-                <i class="bi bi-building-fill display-3 mb-3"></i>
-                <h5 class="fw-bold">TENTANG SEKOLAH</h5>
-                <a href="#" class="btn btn-light mt-3">Selengkapnya</a>
-            </div>
-            </div>
-        </div>
-
-        </div>
-        </div>
-    </section>
-
     <section class="container-fluid py-5" style="background-color: #001f3f;">
         <div class="container">
-        <h3 class="text-center mb-4 fw-bold text-white">Pengumuman & Acara Sekolah</h3>
+        <h3 class="text-center mb-4 fw-bold text-white">Daftar Ekstrakurikuler</h3>
 
         <div class="row g-4">
-            @forelse($pengumuman as $row)
+        @forelse($ekstrakurikulers as $row)
             <div class="col-md-6 col-lg-4">
                 <div class="card border-0 shadow-sm h-100 hover-card">
                     <div class="position-relative overflow-hidden" style="height: 220px;">
                         @if($row->foto)
-                            <img src="{{ asset('storage/' . str_replace('storage/', '', $row->foto)) }}" 
-                                 class="card-img-top w-100 h-100" style="object-fit: cover;">
+                            <img src="{{ asset($row->foto) }}" 
+                                class="card-img-top w-100 h-100" style="object-fit: cover;">
                         @else
-                            <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-primary bg-gradient">
-                                <i class="bi bi-megaphone text-white" style="font-size: 4rem; opacity:.4"></i>
+                            <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-secondary bg-gradient">
+                                <i class="bi bi-people text-white" style="font-size: 4rem; opacity:.4"></i>
                             </div>
                         @endif
                     </div>
+
                     <div class="card-body">
-                        <h5 class="card-title fw-bold">{{ $row->judul_pengumuman }}</h5>
+                        <h5 class="card-title fw-bold">{{ $row->nama_ekstrakurikuler }}</h5>
                         <small class="text-muted">
-                            <i class="bi bi-calendar3 me-1"></i>
-                            {{ \Carbon\Carbon::parse($row->tanggal)->format('d F Y') }}
+                            <i class="bi bi-person-badge me-1"></i>
+                            {{ $row->pembina->nama_lengkap ?? 'Pembina belum diatur' }}
                         </small>
                     </div>
                 </div>
@@ -102,20 +64,17 @@
                 <div class="card border-0 shadow-sm">
                     <div class="card-body text-center py-5">
                         <i class="bi bi-inbox text-muted" style="font-size:4rem;"></i>
-                        <h4 class="text-muted mt-3">Belum Ada Pengumuman</h4>
+                        <h4 class="text-muted mt-3">Belum Ada Ekstrakurikuler</h4>
                     </div>
                 </div>
             </div>
-            @endforelse
-        </div>
+        @endforelse
 
-        <div class="mt-5 d-flex justify-content-center">
-            {{ $pengumuman->withQueryString()->links() }}
         </div>
 
         <div class="text-center mt-2">
-            <a href="{{ route('pengumuman.index') }}" class="btn btn-outline-light btn-sm px-4">
-            Lihat Pengumuman Lainnya
+            <a href="{{ route('ekstrakurikuler.index') }}" class="btn btn-outline-light btn-sm px-4">
+                Lihat Semua Ekstrakurikuler
             </a>
         </div>
         </div>
