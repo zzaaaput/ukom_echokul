@@ -18,7 +18,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [DashboardController::class, 'index'])->name('home');
 Route::get('/anggota', [AnggotaController::class, 'index'])->name('anggota.index');
 Route::get('/ekstrakurikuler', [EkstrakurikulerController::class, 'index'])->name('ekstrakurikuler.index');
-Route::view('/visi-misi', 'siswa.visi_misi')->name('visi_misi.index');
 Route::get('/penilaian', [PenilaianController::class, 'index'])->name('penilaian.index');
 Route::get('/perlombaan', [PerlombaanController::class, 'index'])->name('perlombaan.index');
 Route::get('/kehadiran', [KehadiranController::class, 'index'])->name('kehadiran.index');
@@ -35,13 +34,17 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::post('ekstrakurikuler', [EkstrakurikulerController::class, 'store'])->name('admin.ekstrakurikuler.store');
     Route::put('ekstrakurikuler/{id}', [EkstrakurikulerController::class, 'update'])->name('admin.ekstrakurikuler.update');
     Route::delete('ekstrakurikuler/{id}', [EkstrakurikulerController::class, 'destroy'])->name('admin.ekstrakurikuler.destroy');
+    Route::get('/ekstrakurikuler/export/excel', [EkstrakurikulerController::class, 'exportExcel'])->name('admin.ekstrakurikuler.export.excel');
+    Route::get('/ekstrakurikuler/export/pdf', [EkstrakurikulerController::class, 'exportPDF'])->name('admin.ekstrakurikuler.export.pdf');
 
     Route::get('user', [UserController::class, 'index'])->name('admin.user.index');
     Route::post('user', [UserController::class, 'store'])->name('admin.user.store');
     Route::get('user/{id}/edit', [UserController::class, 'edit'])->name('admin.user.edit');
     Route::put('user/{id}', [UserController::class, 'update'])->name('admin.user.update');
     Route::delete('user/{id}', [UserController::class, 'destroy'])->name('admin.user.destroy');
-    // Route::get('users/export/pdf', [UserController::class, 'exportPdf'])->name('admin.users.export.pdf');
+    Route::get('user/export/excel', [UserController::class, 'exportExcel'])->name('admin.user.export.excel');
+    Route::get('user/export/pdf', [UserController::class, 'exportPdf'])->name('admin.user.export.pdf');
+    
 
     Route::resource('kegiatan', KegiatanController::class)->names('admin.kegiatan');
 
@@ -58,6 +61,8 @@ Route::prefix('pembina')->middleware(['auth', 'role:pembina'])->group(function (
     Route::post('anggota', [AnggotaController::class, 'store'])->name('pembina.anggota.store');
     Route::put('anggota/{id}', [AnggotaController::class, 'update'])->name('pembina.anggota.update');
     Route::delete('anggota/{id}', [AnggotaController::class, 'destroy'])->name('pembina.anggota.destroy');
+    Route::get('/anggota/export-excel', [AnggotaController::class, 'exportExcel'])->name('pembina.anggota.export.excel');
+    Route::get('/anggota/export-pdf', [AnggotaController::class, 'exportPdf'])->name('pembina.anggota.export.pdf');
 
     Route::get('penilaian', [PenilaianController::class, 'index'])->name('pembina.penilaian.index');
     Route::post('penilaian', [PenilaianController::class, 'store'])->name('pembina.penilaian.store');

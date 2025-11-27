@@ -7,6 +7,9 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\EkstrakurikulerExport;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class EkstrakurikulerController extends Controller
 {
@@ -178,6 +181,23 @@ class EkstrakurikulerController extends Controller
         return redirect()->route('ekstrakurikuler.index')->with('success', 'Ekstrakurikuler berhasil dihapus.');
     }
 
+    public function exportExcel()
+    {
+        $data = Ekstrakurikuler::with(['pembina', 'ketua'])->get();
+
+        return Excel::download(new EkstrakurikulerExport($data), 'data_ekstrakurikuler.xlsx');
+    }
+
+    public function exportPDF()
+    {
+        $data = Ekstrakurikuler::with(['pembina', 'ketua'])->get();
+
+        $pdf = Pdf::loadView('admin.ekstrakurikuler_pdf', compact('data'))
+            ->setPaper('a4', 'portrait');
+
+        return $pdf->download('data_ekstrakurikuler.pdf');
+    }
+
     private function uploadFoto($file)
     {
         $path = public_path('storage/images/ekstrakurikuler');
@@ -188,4 +208,6 @@ class EkstrakurikulerController extends Controller
 
         return 'storage/images/ekstrakurikuler/' . $namaFile;
     }
+
+
 }

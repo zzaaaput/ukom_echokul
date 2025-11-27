@@ -5,8 +5,6 @@
 @section('content')
 <div class="container-fluid bg-light min-vh-100 py-5">
     <div class="container">
-
-        <!-- Header Section -->
         <div class="bg-white rounded-4 shadow-sm p-4 mb-4">
             <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
                 <div>
@@ -25,10 +23,8 @@
             </div>
         </div>
 
-        <!-- Filter & Search Section -->
         <div class="bg-white rounded-4 shadow-sm p-4 mb-4">
             <div class="row g-3">
-                <!-- Items Per Page -->
                 <div class="col-md-2">
                     <form method="GET" action="{{ route('anggota.index') }}">
                         <label for="per_page" class="form-label fw-semibold small">
@@ -44,7 +40,6 @@
                     </form>
                 </div>
 
-                <!-- Search -->
                 <div class="col-md-7">
                     <form method="GET" action="{{ route('anggota.index') }}">
                         <input type="hidden" name="per_page" value="{{ request('per_page', 10) }}">
@@ -60,7 +55,6 @@
                     </form>
                 </div>
 
-                <!-- Filter Ekstrakurikuler -->
                 <div class="col-md-3">
                     <form method="GET" action="{{ route('anggota.index') }}">
                         <input type="hidden" name="per_page" value="{{ request('per_page', 10) }}">
@@ -82,7 +76,18 @@
             </div>
         </div>
 
-        <!-- Table Section -->
+        @if(Auth::check() && Auth::user()->role === 'pembina')
+            <div class="d-flex gap-2 mb-3">
+                <a href="{{ route('pembina.anggota.export.excel') }}" class="btn btn-success me-2">
+                    <i class="bi bi-file-earmark-excel me-1"></i> Export Excel
+                </a>
+
+                <a href="{{ route('pembina.anggota.export.pdf') }}" class="btn btn-danger">
+                    <i class="bi bi-file-earmark-pdf me-1"></i> Export PDF
+                </a>
+            </div>
+        @endif
+
         <div class="bg-white rounded-4 shadow-sm overflow-hidden">
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0">
@@ -143,7 +148,6 @@
                             </td>
                         </tr>
 
-                        {{-- ==================== MODAL DETAIL ==================== --}}
                         <div class="modal fade" id="modalDetail{{ $item->id }}" tabindex="-1">
                             <div class="modal-dialog modal-lg modal-dialog-centered">
                                 <div class="modal-content border-0 shadow-lg rounded-4">
@@ -257,7 +261,6 @@
                         </div>
 
                         @if(Auth::check() && Auth::user()->role === 'pembina')
-                            {{-- ==================== MODAL EDIT ==================== --}}
                             <div class="modal fade" id="modalEdit{{ $item->id }}" tabindex="-1">
                                 <div class="modal-dialog modal-lg modal-dialog-centered">
                                     <div class="modal-content border-0 shadow-lg rounded-4">
@@ -360,7 +363,6 @@
                                 </div>
                             </div>
 
-                            {{-- ==================== MODAL HAPUS ==================== --}}
                             <div class="modal fade" id="modalHapus{{ $item->id }}" tabindex="-1">
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content border-0 shadow-lg rounded-4">
@@ -414,7 +416,6 @@
                 </table>
             </div>
 
-            <!-- Pagination -->
             @if($anggota->hasPages())
             <div class="p-4 border-top">
                 <div class="d-flex justify-content-center">
@@ -428,7 +429,6 @@
 </div>
 
 @if(Auth::check() && Auth::user()->role === 'pembina')
-    {{-- ==================== MODAL TAMBAH ANGGOTA ==================== --}}
     <div class="modal fade" id="modalTambah" tabindex="-1">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content border-0 shadow-lg rounded-4">

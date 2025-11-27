@@ -7,14 +7,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use App\Exports\UsersExport;
+use App\Exports\UserExport;
 use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class UserController extends Controller
 {
-    /**
-     * Tampilkan semua user
-     */
     public function index()
     {
         if (Auth::user()->role !== 'admin') {
@@ -26,22 +24,16 @@ class UserController extends Controller
         return view('admin.user', compact('users'));
     }
 
-    /**
-     * Form tambah user
-     */
     public function create()
     {
         if (Auth::user()->role !== 'admin') {
             abort(403, 'Hanya admin yang bisa menambahkan user.');
         }
 
-        $roles = ['admin', 'pembina', 'ketua', 'siswa']; // Pilihan role
+        $roles = ['admin', 'pembina', 'ketua', 'siswa']; 
         return view('admin.user.create', compact('roles'));
     }
 
-    /**
-     * Simpan data user baru
-     */
     public function store(Request $request)
     {
         if (Auth::user()->role !== 'admin') {
@@ -74,9 +66,6 @@ class UserController extends Controller
         return redirect()->route('admin.user.index')->with('success', 'User berhasil ditambahkan!');
     }
 
-    /**
-     * Form edit user
-     */
     public function edit($id)
     {
         if (Auth::user()->role !== 'admin') {
@@ -89,9 +78,6 @@ class UserController extends Controller
         return view('admin.users.edit', compact('user', 'roles'));
     }
 
-    /**
-     * Update data user
-     */
     public function update(Request $request, $id)
     {
         if (Auth::user()->role !== 'admin') {
@@ -132,9 +118,6 @@ class UserController extends Controller
         return redirect()->route('admin.user.index')->with('success', 'User berhasil diperbarui!');
     }
 
-    /**
-     * Hapus user
-     */
     public function destroy($id)
     {
         if (Auth::user()->role !== 'admin') {
@@ -143,7 +126,6 @@ class UserController extends Controller
 
         $user = User::findOrFail($id);
 
-        // Jangan biarkan admin menghapus dirinya sendiri
         if ($user->id === Auth::id()) {
             return redirect()->route('admin.user.index')->with('error', 'Anda tidak bisa menghapus user sendiri!');
         }
@@ -157,9 +139,6 @@ class UserController extends Controller
         return redirect()->route('admin.user.index')->with('success', 'User berhasil dihapus!');
     }
 
-    /**
-     * Helper upload foto
-     */
     private function uploadFoto($file)
     {
         $path = public_path('storage/images/users');
@@ -176,7 +155,16 @@ class UserController extends Controller
 
     public function exportExcel()
     {
-        return Excel::download(new UsersExport, 'data-user.xlsx');
+        return Excel::download(new UserExport, 'data-user.xlsx');
     }
 
+    public function exportPdf()
+    {
+        $users = User::orderBy('nama_lengkap')->get();
+
+        $pdf = Pdf::loadView('admin.user_pdf', compact('users'))
+                ->setPaper('A4', 'portrait');
+
+        return $pdf->download('data-user.pdf');
+    }
 }

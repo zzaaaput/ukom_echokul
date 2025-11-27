@@ -7,6 +7,9 @@ use App\Models\AnggotaEkstrakurikuler;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Exports\AnggotaExport;
+use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class AnggotaController extends Controller
 {
@@ -14,23 +17,19 @@ class AnggotaController extends Controller
     {
         $perPage = $request->get('per_page', 10);
     
-        // Dapatkan ekskul yang diasuh oleh pembina login (jika pembina)
         $pembinaEkskul = null;
         if (Auth::check() && Auth::user()->role === 'pembina') {
             $pembinaEkskul = Ekstrakurikuler::where('user_pembina_id', Auth::id())->first();
         }
     
-        // Query dasar anggota
         $query = AnggotaEkstrakurikuler::with(['user', 'ekstrakurikuler'])
             ->orderBy('ekstrakurikuler_id')
             ->orderBy('jabatan', 'asc');
     
-        // 🔒 Jika pembina login → filter anggota hanya dari ekskul yang ia bimbing
         if (Auth::check() && Auth::user()->role === 'pembina' && $pembinaEkskul) {
             $query->where('ekstrakurikuler_id', $pembinaEkskul->id);
         }
     
-        // 🔍 Fitur pencarian
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
@@ -39,12 +38,10 @@ class AnggotaController extends Controller
             });
         }
     
-        // 🔹 Filter berdasarkan dropdown ekskul (hanya jika bukan pembina atau ingin override)
         if ($request->filled('ekstrakurikuler_id')) {
             $query->where('ekstrakurikuler_id', $request->ekstrakurikuler_id);
         }
     
-        // Pagination
         $anggota = $query->paginate($perPage)
             ->appends([
                 'search' => $request->search,
@@ -52,7 +49,6 @@ class AnggotaController extends Controller
                 'ekstrakurikuler_id' => $request->ekstrakurikuler_id,
             ]);
     
-        // Data tambahan untuk modal
         $users = User::where('role', 'siswa')->orderBy('nama_lengkap')->get();
         $ekstrakurikulerList = Ekstrakurikuler::all();
     
@@ -156,6 +152,37 @@ class AnggotaController extends Controller
 
         return redirect()->route('pembina.anggota.index')
             ->with('success', 'Anggota berhasil dihapus!');
+    }
+
+    public function exportExcel()
+    {
+        $pembinaEkskul = Ekstrakurikuler::where('user_pembina_id', Auth::id())->first();
+
+        if (!$pembinaEkskul) {
+            return back()->with('error', 'Anda tidak memiliki ekstrakurikuler.');
+        }
+
+        return Excel::download(
+            new AnggotaExport($pembinaEkskul->id),
+            'anggota_ekskul_' . $pembinaEkskul->id . '.xlsx'
+        );
+    }
+
+    public function exportPdf()
+    {
+        $pembinaEkskul = Ekstrakurikuler::where('user_pembina_id', Auth::id())->first();
+
+        if (!$pembinaEkskul) {
+            return back()->with('error', 'Anda tidak memiliki ekstrakurikuler.');
+        }
+
+        $anggota = AnggotaEkstrakurikuler::with('user', 'ekstrakurikuler')
+                    ->where('ekstrakurikuler_id', $pembinaEkskul->id)
+                    ->orderBy('nama_anggota')
+                    ->get();
+
+        $pdf = Pdf::loadView('pembina.anggota_ekstrakurikuler_pdf', compact('anggota'));
+        return $pdf->download('anggota_ekskul_' . $pembinaEkskul->id . '.pdf');
     }
 
     private function uploadFoto($file)
